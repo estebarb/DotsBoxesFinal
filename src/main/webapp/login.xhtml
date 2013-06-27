@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <title>Dots &amp; Boxes</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css"/>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/2.3.2/cosmo/bootstrap.min.css"/>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <div class="hero-unit">
+                <h1>Bienvenidos a Dots &amp; Boxes</h1>
+                <p>Este es un divertido juego para dos o más jugadores, donde
+                    gana quien completa más cuadrados.</p>
+            </div>
+            <h:panelGroup layout="block" rendered="#{param.retry != null and param.retry == true}">
+                <div class='row'>
+                    <div class='span12'>
+                        <div class='alert alert-error'>
+                            <button type='button' class='close' data-dismiss='alert'>&times;</button>
+                            <h2>:-( Hubo problemas con su sesión</h2>
+                            Vuelva a iniciar sesión en Dots &amp; Boxes, o, si no tiene cuenta, cree una. ¡Se divertirá muchísimo!
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup layout="block" rendered="#{param.retry != null and param.retry.equals('badpass')}">
+                <div class='row'>
+                    <div class='span12'>
+                        <div class='alert alert-warning'>
+                            <button type='button' class='close' data-dismiss='alert'>&times;</button>
+                            <h2>No se pudo crear su cuenta</h2>
+                            Por favor verifique:
+                            <ol>
+                                <li>Su correo electrónico esté correcto y no lo haga registrado antes.</li>
+                                <li>Ambas contraseñas coincidan.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <div class="row">
+                <div class="span6">
+                    <h1>Iniciar sesión</h1>
+                    <form method="post" action="/login" class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-group" for="login-inputMail">Correo electrónico</label>
+                            <input type="text" id="login-inputMail" placeholder="Su correo electrónico" name="email"/>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-group" for="login-inputPassword">Contraseña:</label>
+                            <input type="password" id="login-inputPassword" placeholder="Contraseña" name="password"/>
+                        </div>
+                        <button class="btn btn-primary btn-large" type="submit">Iniciar Sesión</button>
+                    </form>
+                </div>
+                <div class="span6">
+                    <h1>Registrarse</h1>
+                    <form method="post" action="/register" class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-group" for="reg-inputMail">Correo electrónico</label>
+                            <input type="text" id="reg-inputMail" placeholder="Su correo electrónico" name="email"/>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-group" for="reg-inputName">Nombre:</label>
+                            <input type="text" id="reg-inputName" placeholder="Su nombre" name="name"/>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-group" for="reg-inputPassword">Contraseña:</label>
+                            <input type="password" id="reg-inputPassword" placeholder="Su contraseña" name="password1"/>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-group" for="reg-inputPassword2">Repita la contraseña:</label>
+                            <input type="password" id="reg-inputPassword2" placeholder="Repita su contraseña" name="password2"/>
+                        </div>
+                        <button class="btn btn-success btn-large" type="submit">Registrarse</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer">
+                <p class="muted credit">
+                    &copy; Proyecto de Ingenier&iacute;a de Software 2012-2013 | <a
+                        href="http://stats.pingdom.com/qikt2b86ybuv/868786">Estado del
+                        sistema</a>
+                </p>
+            </div>
+        </div>
+        </h:body>
+</html>
