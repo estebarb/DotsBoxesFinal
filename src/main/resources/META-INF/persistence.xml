@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="tk.dotsboxes_DotsBoxesFinal_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>tk.dotsboxes.dotsboxesfinal.Torneos</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Usuarios</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Jugadores</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Juegos</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Pendientes</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Jugadoresjuego</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Jugadorespc</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Ganadores</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Miembrosequipo</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Participantestorneo</class>
+    <class>tk.dotsboxes.dotsboxesfinal.Equipos</class>
+    <class>tk.dotsboxes.entities.Amigos</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://dotsboxes.tk:5432/erbtest"/>
+      <property name="javax.persistence.jdbc.password" value="honduras2045"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="proyecto"/>
+    </properties>
+  </persistence-unit>
+</persistence>
