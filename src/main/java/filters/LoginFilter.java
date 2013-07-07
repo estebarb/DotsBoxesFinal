@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import utils.CookieReader;
 
-//@WebFilter(urlPatterns = {"/api/*", "/", "/index.jsp"})
+@WebFilter(urlPatterns = {"/app/*", "", "/index.xhtml"})
 public class LoginFilter implements Filter {
 
     @Override
@@ -27,6 +27,7 @@ public class LoginFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        System.out.println("Filtrado");
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         Cookie[] cookie = request.getCookies();

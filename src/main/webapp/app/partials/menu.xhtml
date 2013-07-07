@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:body>
+        <div class="row">
+            <h:form>
+                <div class="span11">
+                    <a href="/" class="btn btn-large btn-primary">Inicio</a>
+                    <a href="/play/newgame" class="btn btn-large btn-success">Crear Juego</a>
+                </div>
+                <div class="span1">
+                    <h:commandLink value="Cerrar sesión" class="btn btn-large" action="#{sessionsBean.doLogout}" />
+                </div>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+
+

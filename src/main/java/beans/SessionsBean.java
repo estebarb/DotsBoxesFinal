@@ -44,7 +44,7 @@ public class SessionsBean {
     }
 
     public String DoLogin() {
-        Autenticar aut = new Autenticar();
+        final Autenticar aut = new Autenticar();
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         try {
             try {
