@@ -82,14 +82,14 @@ public class RegisterUser {
                 boolean exitoso = aut.createUser(getEmail(), getNombre(), getPassword1());
                 if (exitoso) {
                     // Se redirige a la página principal
-                    SessionInBean login = new SessionInBean();
+                    SessionsBean login = new SessionsBean();
                     login.setEmail(getEmail());
                     login.setPassword(getPassword1());
                     login.DoLogin();
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/");
                 }
             } else {
-                FacesContext.getCurrentInstance().addMessage("registerClient", new FacesMessage("Las contraseñas no coinciden."));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Las contraseñas no coinciden."));
             }
         } catch (SQLException ex) {
             Logger.getLogger(RegisterUser.class.getName()).log(Level.SEVERE, null, ex);

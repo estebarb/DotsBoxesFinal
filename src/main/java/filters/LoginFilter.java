@@ -51,7 +51,7 @@ public class LoginFilter implements Filter {
                     c.setMaxAge(0);
                     response.addCookie(c);
                 }
-                response.sendRedirect(request.getContextPath() + "/register.xhtml");
+                response.sendRedirect(request.getContextPath() + "/login.xhtml");
             }// fin else de ¿sesión válida?
 
         }// fin else de ¿hay sesión?

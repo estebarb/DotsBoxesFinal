@@ -22,7 +22,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @RequestScoped
-public class SessionInBean {
+public class SessionsBean {
 
     private String email;
     private String password;
@@ -70,16 +70,31 @@ public class SessionInBean {
                 ec.redirect("/bsod.jsp");
             }
         } catch (IOException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Imposible redirigirse a /index.xhtml", ex);
         }
 
 
         return null;
     }
 
+    public String DoLogout() {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        try {
+            // Podría borrar las cookies, pero estas también servirán...
+            ec.addResponseCookie("user", "", null);
+            ec.addResponseCookie("token", "", null);
+            
+            // Se redirige a la página de login
+            ec.redirect("/login.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(SessionsBean.class.getName()).log(Level.SEVERE, "Imposible redirigirse a /index.xhtml", ex);
+        }
+        return null;
+    }
+
     /**
-     * Creates a new instance of SessionInBean
+     * Creates a new instance of SessionsBean
      */
-    public SessionInBean() {
+    public SessionsBean() {
     }
 }
