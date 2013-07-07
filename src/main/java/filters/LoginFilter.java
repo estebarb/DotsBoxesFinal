@@ -10,9 +10,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import utils.CookieReader;
 
 //@WebFilter(urlPatterns = {"/api/*", "/", "/index.jsp"})
 public class LoginFilter implements Filter {
@@ -27,29 +29,31 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        HttpSession session = request.getSession(true);
-        
-        Autenticar autenticador = new Autenticar();
+        Cookie[] cookie = request.getCookies();
 
-        if (session == null || session.getAttribute("user") == null || session.getAttribute("token") == null) {
-            response.sendRedirect(request.getContextPath() + "/start.jsp"); // No logged-in user found, so redirect to login page.
+        Autenticar autenticador = new Autenticar();
+        String user = CookieReader.getCookieValue(cookie, "user", null);
+        String CKtoken = CookieReader.getCookieValue(cookie, "token", null);
+
+        if (cookie == null || user == null || CKtoken == null) {
+            response.sendRedirect(request.getContextPath() + "/login.xhtml"); // No logged-in user found, so redirect to login page.
         } else {
             // Ahora debemos verificar que la sesión y el usuario sean correctos:
-            String user = (String) session.getAttribute("user");
-            String sessionID = (String) session.getId();
-            //System.out.println(user + " " + sessionID + " " + session.getAttribute("token").getClass().getCanonicalName());
-            byte[] token = (byte[]) session.getAttribute("token");
-            boolean valido = autenticador.ValidateUser(user, sessionID, token);
+            byte[] token = CKtoken.getBytes();
+            boolean valido = autenticador.ValidateUser(user, token);
             if (valido) {
                 chain.doFilter(req, res); // Logged-in user found, so just continue request.
             } else {
                 // ¡¡¡No es válido!!!
                 // Alguien nos está engañando (o reiniciamos el servlet)
                 // Es necesario destruir los datos que recibimos...
-                session.invalidate();
-                response.sendRedirect(request.getContextPath() + "/start.jsp?retry=true");
+                for(Cookie c : cookie){
+                    c.setMaxAge(0);
+                    response.addCookie(c);
+                }
+                response.sendRedirect(request.getContextPath() + "/register.xhtml");
             }// fin else de ¿sesión válida?
-            
+
         }// fin else de ¿hay sesión?
     }
 

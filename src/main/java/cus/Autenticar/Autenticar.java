@@ -29,14 +29,13 @@ import utils.EmailValidator;
  */
 public class Autenticar {
 
-    @PersistenceContext(unitName = "DotsBoxesBServerPU")
+    @PersistenceContext(unitName = "DotsBoxesPU")
     private EntityManager em;
     private final static int ITERATION_NUMBER = 1000;
-    
-    public Autenticar(){
+
+    public Autenticar() {
         em = EMF.createEntityManager();
     }
-    
     /**
      * SecretoAplicacion
      *
@@ -44,7 +43,7 @@ public class Autenticar {
      * Permite verificar que los datos de la cookie del usuario realmente fueron
      * validados por este programa.
      */
-    private final static long SecretoAplicacion = 0; // new SecureRandom().nextLong();
+    private final static String SecretoAplicacion = "0"; // new SecureRandom().nextLong().toString();
 
     /**
      * Valida que el usuario y el verificationHash declarados por un usuario
@@ -56,21 +55,19 @@ public class Autenticar {
      * @param verificationHash
      * @return
      */
-    public boolean ValidateUser(String userid, String sessionID, byte[] verificationHash) {
-        return Arrays.equals(GenerateSessionHash(userid, sessionID), verificationHash);
+    public boolean ValidateUser(String userid, byte[] verificationHash) {
+        return Arrays.equals(GenerateSessionHash(userid), verificationHash);
     }
 
-    public byte[] GenerateSessionHash(String userid, String sessionID) {
+    public byte[] GenerateSessionHash(String userid) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
 
             byte[] bUserID = Base64Conversions.base64ToByte(userid);
-            byte[] bSessionID = Base64Conversions.base64ToByte(sessionID);
-            byte[] bSecretoAplicacion = Base64Conversions.base64ToByte(Long.toString(SecretoAplicacion));
+            byte[] bSecretoAplicacion = Base64Conversions.base64ToByte(SecretoAplicacion);
 
             digest.update(bUserID);
-            digest.update(bSessionID);
             digest.update(bSecretoAplicacion);
             return digest.digest();
         } catch (NoSuchAlgorithmException ex) {

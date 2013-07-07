@@ -82,6 +82,10 @@ public class RegisterUser {
                 boolean exitoso = aut.createUser(getEmail(), getNombre(), getPassword1());
                 if (exitoso) {
                     // Se redirige a la página principal
+                    SessionInBean login = new SessionInBean();
+                    login.setEmail(getEmail());
+                    login.setPassword(getPassword1());
+                    login.DoLogin();
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/");
                 }
             } else {

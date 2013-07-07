@@ -22,59 +22,22 @@
                 <p>Este es un divertido juego para dos o más jugadores, donde
                     gana quien completa más cuadrados.</p>
             </div>
-            <h:panelGroup layout="block" rendered="#{param.retry != null and param.retry == true}">
-                <div class='row'>
-                    <div class='span12'>
-                        <div class='alert alert-error'>
-                            <button type='button' class='close' data-dismiss='alert'>&times;</button>
-                            <h2>:-( Hubo problemas con su sesión</h2>
-                            Vuelva a iniciar sesión en Dots &amp; Boxes, o, si no tiene cuenta, cree una. ¡Se divertirá muchísimo!
-                        </div>
-                    </div>
-                </div>
-            </h:panelGroup>
-            <h:panelGroup layout="block" rendered="#{param.retry != null and param.retry.equals('badpass')}">
-                <div class='row'>
-                    <div class='span12'>
-                        <div class='alert alert-warning'>
-                            <button type='button' class='close' data-dismiss='alert'>&times;</button>
-                            <h2>No se pudo crear su cuenta</h2>
-                            Por favor verifique:
-                            <ol>
-                                <li>Su correo electrónico esté correcto y no lo haga registrado antes.</li>
-                                <li>Ambas contraseñas coincidan.</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </h:panelGroup>
             <div class="row">
                 <div class="span6">
                     <h1>Iniciar sesión</h1>
-                    <form method="post" action="/login" class="form-horizontal">
-                        <div class="control-group">
-                            <label class="control-group" for="login-inputMail">Correo electrónico</label>
-                            <input type="text" id="login-inputMail" placeholder="Su correo electrónico" name="email"/>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-group" for="login-inputPassword">Contraseña:</label>
-                            <input type="password" id="login-inputPassword" placeholder="Contraseña" name="password"/>
-                        </div>
-                        <button class="btn btn-primary btn-large" type="submit">Iniciar Sesión</button>
-                    </form>
                     <h:form>
                         <div class="control-group">
                             <h:outputLabel class="control-group" for="login-inputMail">Correo electrónico</h:outputLabel>
                             <h:message for="login-inputMail"/><br/>
-                            <h:inputText id="login-inputMail" required="true" requiredMessage="Obligatorio"/>
+                            <h:inputText id="login-inputMail" value="#{SessionInBean.email}" required="true" requiredMessage="Obligatorio"/>
                         </div>
                         <div class="control-group">
                             <h:outputLabel class="control-group" for="login-inputPassword">Contraseña:</h:outputLabel>
                             <h:message for="login-inputPassword"/><br/>
-                            <h:inputSecret id="login-inputPassword" required="true" requiredMessage="Obligatorio"/>
+                            <h:inputSecret id="login-inputPassword" value="#{SessionInBean.password}" required="true" requiredMessage="Obligatorio"/>
                         </div>
                         <h:commandButton value="Iniciar Sesión" styleClass="btn btn-success btn-large"
-                                         action="#{LoginBean.Login()}"
+                                         action="#{SessionInBean.DoLogin()}"
                                          id="login-command"
                                          />
                     </h:form>
