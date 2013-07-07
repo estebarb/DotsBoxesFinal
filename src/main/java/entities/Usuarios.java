@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tk.dotsboxes.entities;
+package entities;
 
 import java.io.Serializable;
 import java.util.Collection;

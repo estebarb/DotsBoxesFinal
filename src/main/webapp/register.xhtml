@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <title>Dots &amp; Boxes</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css"/>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/2.3.2/cosmo/bootstrap.min.css"/>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <div class="hero-unit">
+                <h1>Bienvenidos a Dots &amp; Boxes</h1>
+                <p>Este es un divertido juego para dos o más jugadores, donde
+                    gana quien completa más cuadrados.</p>
+            </div>
+
+            <div class="row">
+                <div class="span6">
+                    <div class="row">
+                        <c:if test="#{facesContext.messageList != null and facesContext.messageList.size() > 0}">
+                            <div class='alert alert-warning'>
+                                <button type='button' class='close' data-dismiss='alert'>&times;</button>
+                                <h2>¡Hubo errores con su solicitud!</h2>
+                                <p>Por favor corrija los errores indicados antes de continuar.</p>
+                                <h:messages/>
+                            </div>
+                        </c:if>
+                    </div>
+                    <div class="row">
+                        <a href="login.xhtml" class="text-center btn btn-primary btn-large">
+                            O inicie sesión con su cuenta existente
+                        </a>
+                    </div>
+                </div>
+                <div class="span6">
+                    <h1>Registrarse</h1>
+                    <h:form id="regForm">
+                        <div class="control-group">
+                            <h:outputLabel for="reg-email" value="Correo electrónico:"/>
+                            <h:message for="reg-email" style="color: red;"/><br/>
+                            <h:inputText id="reg-email" value="#{RegisterBean.email}" 
+                                         validator="#{RegisterBean.checkEmail}" 
+                                         required="true" 
+                                         requiredMessage="Obligatorio"/>
+                        </div>
+                        <div class="control-group">
+                            <h:outputLabel for="reg-name" value="Nombre:"/>
+                            <h:message for="reg-name" style="color: red;"/><br/>
+                            <h:inputText id="reg-name" value="#{RegisterBean.nombre}" required="true" requiredMessage="Obligatorio"/>
+                        </div>
+                        <div class="control-group">
+                            <h:outputLabel for="reg-pass1" value="Contraseña:"/>
+                            <h:message for="reg-pass1" style="color: red;"/><br/>
+                            <h:inputSecret id="reg-pass1" value="#{RegisterBean.password1}" required="true" requiredMessage="Obligatorio">
+                                <f:validateLength minimum="#{RegisterBean.minimalPasswordLenght}" />
+                            </h:inputSecret>
+                        </div>
+                        <div class="control-group">
+                            <h:outputLabel for="reg-pass2" value="Repita su contraseña"/>
+                            <h:message for="reg-pass2" style="color: red;"/><br/>
+                            <h:inputSecret id="reg-pass2" value="#{RegisterBean.password2}" required="true" requiredMessage="Obligatorio">
+                                <f:validateLength minimum="#{RegisterBean.minimalPasswordLenght}"/>
+                            </h:inputSecret>
+                        </div>
+                        <h:message for="registerClient" style="color: red;"/><br/>
+                        <h:commandButton value="Registrarse" styleClass="btn btn-success btn-large"
+                                         action="#{RegisterBean.Register()}"
+                                         id="reg-command"
+                                         />
+                    </h:form>
+                </div>
+            </div>
+            <ui:include src="/app/partials/footer.xhtml"/>
+        </div>
+    </h:body>
+</html>

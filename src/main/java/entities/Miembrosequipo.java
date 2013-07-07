@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tk.dotsboxes.entities;
+package entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -23,29 +23,29 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Esteban
  */
 @Entity
-@Table(name = "amigos")
+@Table(name = "miembrosequipo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Amigos.findAll", query = "SELECT a FROM Amigos a"),
-    @NamedQuery(name = "Amigos.findById", query = "SELECT a FROM Amigos a WHERE a.id = :id")})
-public class Amigos implements Serializable {
+    @NamedQuery(name = "Miembrosequipo.findAll", query = "SELECT m FROM Miembrosequipo m"),
+    @NamedQuery(name = "Miembrosequipo.findById", query = "SELECT m FROM Miembrosequipo m WHERE m.id = :id")})
+public class Miembrosequipo implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @JoinColumn(name = "amigo", referencedColumnName = "id")
+    @JoinColumn(name = "jugador", referencedColumnName = "id")
     @ManyToOne
-    private Usuarios amigo;
-    @JoinColumn(name = "persona", referencedColumnName = "id")
+    private Usuarios jugador;
+    @JoinColumn(name = "equipo", referencedColumnName = "id")
     @ManyToOne
-    private Usuarios persona;
+    private Equipos equipo;
 
-    public Amigos() {
+    public Miembrosequipo() {
     }
 
-    public Amigos(Long id) {
+    public Miembrosequipo(Long id) {
         this.id = id;
     }
 
@@ -57,20 +57,20 @@ public class Amigos implements Serializable {
         this.id = id;
     }
 
-    public Usuarios getAmigo() {
-        return amigo;
+    public Usuarios getJugador() {
+        return jugador;
     }
 
-    public void setAmigo(Usuarios amigo) {
-        this.amigo = amigo;
+    public void setJugador(Usuarios jugador) {
+        this.jugador = jugador;
     }
 
-    public Usuarios getPersona() {
-        return persona;
+    public Equipos getEquipo() {
+        return equipo;
     }
 
-    public void setPersona(Usuarios persona) {
-        this.persona = persona;
+    public void setEquipo(Equipos equipo) {
+        this.equipo = equipo;
     }
 
     @Override
@@ -83,10 +83,10 @@ public class Amigos implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Amigos)) {
+        if (!(object instanceof Miembrosequipo)) {
             return false;
         }
-        Amigos other = (Amigos) object;
+        Miembrosequipo other = (Miembrosequipo) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -95,7 +95,7 @@ public class Amigos implements Serializable {
 
     @Override
     public String toString() {
-        return "tk.dotsboxes.entities.Amigos[ id=" + id + " ]";
+        return "tk.dotsboxes.dotsboxesfinal.Miembrosequipo[ id=" + id + " ]";
     }
     
 }

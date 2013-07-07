@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tk.dotsboxes.entities;
+package entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -23,29 +23,32 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Esteban
  */
 @Entity
-@Table(name = "miembrosequipo")
+@Table(name = "pendientes")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Miembrosequipo.findAll", query = "SELECT m FROM Miembrosequipo m"),
-    @NamedQuery(name = "Miembrosequipo.findById", query = "SELECT m FROM Miembrosequipo m WHERE m.id = :id")})
-public class Miembrosequipo implements Serializable {
+    @NamedQuery(name = "Pendientes.findAll", query = "SELECT p FROM Pendientes p"),
+    @NamedQuery(name = "Pendientes.findById", query = "SELECT p FROM Pendientes p WHERE p.id = :id"),
+    @NamedQuery(name = "Pendientes.findByTurno", query = "SELECT p FROM Pendientes p WHERE p.turno = :turno")})
+public class Pendientes implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
+    @Column(name = "turno")
+    private Boolean turno;
     @JoinColumn(name = "jugador", referencedColumnName = "id")
     @ManyToOne
     private Usuarios jugador;
-    @JoinColumn(name = "equipo", referencedColumnName = "id")
+    @JoinColumn(name = "juego", referencedColumnName = "id")
     @ManyToOne
-    private Equipos equipo;
+    private Juegos juego;
 
-    public Miembrosequipo() {
+    public Pendientes() {
     }
 
-    public Miembrosequipo(Long id) {
+    public Pendientes(Long id) {
         this.id = id;
     }
 
@@ -57,6 +60,14 @@ public class Miembrosequipo implements Serializable {
         this.id = id;
     }
 
+    public Boolean getTurno() {
+        return turno;
+    }
+
+    public void setTurno(Boolean turno) {
+        this.turno = turno;
+    }
+
     public Usuarios getJugador() {
         return jugador;
     }
@@ -65,12 +76,12 @@ public class Miembrosequipo implements Serializable {
         this.jugador = jugador;
     }
 
-    public Equipos getEquipo() {
-        return equipo;
+    public Juegos getJuego() {
+        return juego;
     }
 
-    public void setEquipo(Equipos equipo) {
-        this.equipo = equipo;
+    public void setJuego(Juegos juego) {
+        this.juego = juego;
     }
 
     @Override
@@ -83,10 +94,10 @@ public class Miembrosequipo implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Miembrosequipo)) {
+        if (!(object instanceof Pendientes)) {
             return false;
         }
-        Miembrosequipo other = (Miembrosequipo) object;
+        Pendientes other = (Pendientes) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -95,7 +106,7 @@ public class Miembrosequipo implements Serializable {
 
     @Override
     public String toString() {
-        return "tk.dotsboxes.dotsboxesfinal.Miembrosequipo[ id=" + id + " ]";
+        return "tk.dotsboxes.dotsboxesfinal.Pendientes[ id=" + id + " ]";
     }
     
 }

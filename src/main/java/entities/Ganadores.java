@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tk.dotsboxes.entities;
+package entities;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,11 +12,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -25,36 +26,28 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Esteban
  */
 @Entity
-@Table(name = "jugadorespc")
+@Table(name = "ganadores")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Jugadorespc.findAll", query = "SELECT j FROM Jugadorespc j"),
-    @NamedQuery(name = "Jugadorespc.findById", query = "SELECT j FROM Jugadorespc j WHERE j.id = :id"),
-    @NamedQuery(name = "Jugadorespc.findByNombre", query = "SELECT j FROM Jugadorespc j WHERE j.nombre = :nombre"),
-    @NamedQuery(name = "Jugadorespc.findByDescripcion", query = "SELECT j FROM Jugadorespc j WHERE j.descripcion = :descripcion"),
-    @NamedQuery(name = "Jugadorespc.findByRanking", query = "SELECT j FROM Jugadorespc j WHERE j.ranking = :ranking")})
-public class Jugadorespc implements Serializable {
+    @NamedQuery(name = "Ganadores.findAll", query = "SELECT g FROM Ganadores g"),
+    @NamedQuery(name = "Ganadores.findById", query = "SELECT g FROM Ganadores g WHERE g.id = :id")})
+public class Ganadores implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @Size(max = 255)
-    @Column(name = "nombre")
-    private String nombre;
-    @Size(max = 255)
-    @Column(name = "descripcion")
-    private String descripcion;
-    @Column(name = "ranking")
-    private Integer ranking;
-    @OneToMany(mappedBy = "jugadorpc")
+    @JoinColumn(name = "juego", referencedColumnName = "id")
+    @ManyToOne
+    private Juegos juego;
+    @OneToMany(mappedBy = "ganador")
     private Collection<Jugadores> jugadoresCollection;
 
-    public Jugadorespc() {
+    public Ganadores() {
     }
 
-    public Jugadorespc(Long id) {
+    public Ganadores(Long id) {
         this.id = id;
     }
 
@@ -66,28 +59,12 @@ public class Jugadorespc implements Serializable {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Juegos getJuego() {
+        return juego;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Integer getRanking() {
-        return ranking;
-    }
-
-    public void setRanking(Integer ranking) {
-        this.ranking = ranking;
+    public void setJuego(Juegos juego) {
+        this.juego = juego;
     }
 
     @XmlTransient
@@ -109,10 +86,10 @@ public class Jugadorespc implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Jugadorespc)) {
+        if (!(object instanceof Ganadores)) {
             return false;
         }
-        Jugadorespc other = (Jugadorespc) object;
+        Ganadores other = (Ganadores) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -121,7 +98,7 @@ public class Jugadorespc implements Serializable {
 
     @Override
     public String toString() {
-        return "tk.dotsboxes.dotsboxesfinal.Jugadorespc[ id=" + id + " ]";
+        return "tk.dotsboxes.dotsboxesfinal.Ganadores[ id=" + id + " ]";
     }
     
 }

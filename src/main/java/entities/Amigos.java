@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tk.dotsboxes.entities;
+package entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -23,32 +23,29 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Esteban
  */
 @Entity
-@Table(name = "pendientes")
+@Table(name = "amigos")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Pendientes.findAll", query = "SELECT p FROM Pendientes p"),
-    @NamedQuery(name = "Pendientes.findById", query = "SELECT p FROM Pendientes p WHERE p.id = :id"),
-    @NamedQuery(name = "Pendientes.findByTurno", query = "SELECT p FROM Pendientes p WHERE p.turno = :turno")})
-public class Pendientes implements Serializable {
+    @NamedQuery(name = "Amigos.findAll", query = "SELECT a FROM Amigos a"),
+    @NamedQuery(name = "Amigos.findById", query = "SELECT a FROM Amigos a WHERE a.id = :id")})
+public class Amigos implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @Column(name = "turno")
-    private Boolean turno;
-    @JoinColumn(name = "jugador", referencedColumnName = "id")
+    @JoinColumn(name = "amigo", referencedColumnName = "id")
     @ManyToOne
-    private Usuarios jugador;
-    @JoinColumn(name = "juego", referencedColumnName = "id")
+    private Usuarios amigo;
+    @JoinColumn(name = "persona", referencedColumnName = "id")
     @ManyToOne
-    private Juegos juego;
+    private Usuarios persona;
 
-    public Pendientes() {
+    public Amigos() {
     }
 
-    public Pendientes(Long id) {
+    public Amigos(Long id) {
         this.id = id;
     }
 
@@ -60,28 +57,20 @@ public class Pendientes implements Serializable {
         this.id = id;
     }
 
-    public Boolean getTurno() {
-        return turno;
+    public Usuarios getAmigo() {
+        return amigo;
     }
 
-    public void setTurno(Boolean turno) {
-        this.turno = turno;
+    public void setAmigo(Usuarios amigo) {
+        this.amigo = amigo;
     }
 
-    public Usuarios getJugador() {
-        return jugador;
+    public Usuarios getPersona() {
+        return persona;
     }
 
-    public void setJugador(Usuarios jugador) {
-        this.jugador = jugador;
-    }
-
-    public Juegos getJuego() {
-        return juego;
-    }
-
-    public void setJuego(Juegos juego) {
-        this.juego = juego;
+    public void setPersona(Usuarios persona) {
+        this.persona = persona;
     }
 
     @Override
@@ -94,10 +83,10 @@ public class Pendientes implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Pendientes)) {
+        if (!(object instanceof Amigos)) {
             return false;
         }
-        Pendientes other = (Pendientes) object;
+        Amigos other = (Amigos) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -106,7 +95,7 @@ public class Pendientes implements Serializable {
 
     @Override
     public String toString() {
-        return "tk.dotsboxes.dotsboxesfinal.Pendientes[ id=" + id + " ]";
+        return "tk.dotsboxes.entities.Amigos[ id=" + id + " ]";
     }
     
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tk.dotsboxes.entities;
+package entities;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,12 +12,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -26,28 +25,34 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Esteban
  */
 @Entity
-@Table(name = "ganadores")
+@Table(name = "equipos")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Ganadores.findAll", query = "SELECT g FROM Ganadores g"),
-    @NamedQuery(name = "Ganadores.findById", query = "SELECT g FROM Ganadores g WHERE g.id = :id")})
-public class Ganadores implements Serializable {
+    @NamedQuery(name = "Equipos.findAll", query = "SELECT e FROM Equipos e"),
+    @NamedQuery(name = "Equipos.findById", query = "SELECT e FROM Equipos e WHERE e.id = :id"),
+    @NamedQuery(name = "Equipos.findByNombre", query = "SELECT e FROM Equipos e WHERE e.nombre = :nombre"),
+    @NamedQuery(name = "Equipos.findByRanking", query = "SELECT e FROM Equipos e WHERE e.ranking = :ranking")})
+public class Equipos implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @JoinColumn(name = "juego", referencedColumnName = "id")
-    @ManyToOne
-    private Juegos juego;
-    @OneToMany(mappedBy = "ganador")
+    @Size(max = 255)
+    @Column(name = "nombre")
+    private String nombre;
+    @Column(name = "ranking")
+    private Integer ranking;
+    @OneToMany(mappedBy = "equipo")
+    private Collection<Miembrosequipo> miembrosequipoCollection;
+    @OneToMany(mappedBy = "equipo")
     private Collection<Jugadores> jugadoresCollection;
 
-    public Ganadores() {
+    public Equipos() {
     }
 
-    public Ganadores(Long id) {
+    public Equipos(Long id) {
         this.id = id;
     }
 
@@ -59,12 +64,29 @@ public class Ganadores implements Serializable {
         this.id = id;
     }
 
-    public Juegos getJuego() {
-        return juego;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setJuego(Juegos juego) {
-        this.juego = juego;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(Integer ranking) {
+        this.ranking = ranking;
+    }
+
+    @XmlTransient
+    public Collection<Miembrosequipo> getMiembrosequipoCollection() {
+        return miembrosequipoCollection;
+    }
+
+    public void setMiembrosequipoCollection(Collection<Miembrosequipo> miembrosequipoCollection) {
+        this.miembrosequipoCollection = miembrosequipoCollection;
     }
 
     @XmlTransient
@@ -86,10 +108,10 @@ public class Ganadores implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Ganadores)) {
+        if (!(object instanceof Equipos)) {
             return false;
         }
-        Ganadores other = (Ganadores) object;
+        Equipos other = (Equipos) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -98,7 +120,7 @@ public class Ganadores implements Serializable {
 
     @Override
     public String toString() {
-        return "tk.dotsboxes.dotsboxesfinal.Ganadores[ id=" + id + " ]";
+        return "tk.dotsboxes.dotsboxesfinal.Equipos[ id=" + id + " ]";
     }
     
 }
