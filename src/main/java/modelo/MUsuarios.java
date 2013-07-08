@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import entities.Usuarios;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import utils.CookieReader;
 import utils.EMF;
 
@@ -36,7 +37,7 @@ public class MUsuarios {
 
     public Usuarios getUserByID(String id) {
         List<Usuarios> users = em.createNamedQuery("Usuarios.findById")
-                .setParameter("id", id)
+                .setParameter("id", Long.parseLong(id))
                 .getResultList();
         if (users.isEmpty()) {
             return null;
@@ -44,9 +45,13 @@ public class MUsuarios {
             return users.get(0);
         }
     }
-    
-    public Usuarios getUserByCookie(Cookie[] c){
+
+    public Usuarios getUserByCookie(Cookie[] c) {
         String user = CookieReader.getCookieValue(c, "user", null);
         return getUserByID(user);
+    }
+
+    public Usuarios getUserByRequest(HttpServletRequest req) {
+        return getUserByCookie(req.getCookies());
     }
 }
