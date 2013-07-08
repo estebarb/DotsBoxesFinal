@@ -15,6 +15,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import utils.Base64Conversions;
+import utils.CookieReader;
 
 /**
  *
@@ -53,9 +58,9 @@ public class SessionsBean {
                 if (idAsignado != null) {
                     // Inicializa la sesión
 
-
+                    String token = Base64Conversions.byteToBase64(aut.GenerateSessionHash(idAsignado.toString()));
                     ec.addResponseCookie("user", idAsignado.toString(), null);
-                    ec.addResponseCookie("token", aut.GenerateSessionHash(idAsignado.toString()).toString(), null);
+                    ec.addResponseCookie("token", token, null);
 
                     ec.redirect("/index.xhtml");
                 } else {
@@ -78,18 +83,48 @@ public class SessionsBean {
     }
 
     public String DoLogout() {
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        System.out.println("DO LOGOUT");
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        Cookie[] cookies = request.getCookies();
         try {
-            // Podría borrar las cookies, pero estas también servirán...
-            ec.addResponseCookie("user", "", null);
-            ec.addResponseCookie("token", "", null);
-            
+            // Borro todas las cookies:
+            for(Cookie c : cookies){
+                c.setMaxAge(0);
+                c.setValue("");
+                c.setPath("/");
+                response.addCookie(c);
+            }
+
             // Se redirige a la página de login
-            ec.redirect("/login.xhtml");
+            response.sendRedirect("/login.xhtml");
         } catch (IOException ex) {
-            Logger.getLogger(SessionsBean.class.getName()).log(Level.SEVERE, "Imposible redirigirse a /index.xhtml", ex);
+            Logger.getLogger(SessionsBean.class.getName()).log(Level.SEVERE, "Imposible redirigirse a /login.xhtml", ex);
         }
         return null;
+    }
+
+    public boolean isAutenticated(HttpServletRequest req) {
+        HttpServletRequest request = (HttpServletRequest) req;
+        Cookie[] cookie = request.getCookies();
+        Autenticar autenticador = new Autenticar();
+        String user = CookieReader.getCookieValue(cookie, "user", null);
+        String CKtoken = CookieReader.getCookieValue(cookie, "token", null);
+        if (cookie == null || user == null || CKtoken == null) {
+            return false; // No logged-in user found, so redirect to login page.
+        } else {
+            // Ahora debemos verificar que la sesión y el usuario sean correctos:
+            byte[] token;
+            try {
+                token = Base64Conversions.base64ToByte(CKtoken);
+                boolean valido = autenticador.ValidateUser(user, token);
+                return valido;
+            } catch (IOException ex) {
+                Logger.getLogger(SessionsBean.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+
+        }// fin else de ¿sesión válida?
     }
 
     /**

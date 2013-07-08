@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:c="http://java.sun.com/jsp/jstl/core">
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
@@ -27,12 +26,12 @@
                     <h1>Iniciar sesión</h1>
                     <h:form>
                         <div class="control-group">
-                            <h:outputLabel class="control-group" for="login-inputMail">Correo electrónico</h:outputLabel>
+                            <h:outputLabel class="control-group" for="inputMail">Correo electrónico</h:outputLabel>
                             <h:message for="inputMail" style="color: red;"/><br/>
                             <h:inputText id="inputMail" value="#{sessionsBean.email}" required="true" requiredMessage="Obligatorio"/>
                         </div>
                         <div class="control-group">
-                            <h:outputLabel class="control-group" for="login-inputPassword">Contraseña:</h:outputLabel>
+                            <h:outputLabel class="control-group" for="inputPassword">Contraseña:</h:outputLabel>
                             <h:message for="inputPassword" style="color: red;"/><br/>
                             <h:inputSecret id="inputPassword" value="#{sessionsBean.password}" required="true" requiredMessage="Obligatorio"/>
                         </div>

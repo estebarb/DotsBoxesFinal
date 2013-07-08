@@ -1,5 +1,6 @@
 // Tomado de: http://stackoverflow.com/tags/servlet-filters/info
 
+import beans.SessionsBean;
 import cus.Autenticar.Autenticar;
 import java.io.IOException;
 
@@ -13,10 +14,9 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import utils.CookieReader;
 
-@WebFilter(urlPatterns = {"/app/*", "", "/index.xhtml"})
+@WebFilter(urlPatterns = {"/*"})
 public class LoginFilter implements Filter {
 
     @Override
@@ -27,35 +27,58 @@ public class LoginFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        System.out.println("Filtrado");
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        Cookie[] cookie = request.getCookies();
+        System.out.println("Filtro login: " + request.getRequestURI().toString());
 
-        Autenticar autenticador = new Autenticar();
-        String user = CookieReader.getCookieValue(cookie, "user", null);
-        String CKtoken = CookieReader.getCookieValue(cookie, "token", null);
+        if (!request.getRequestURI().toString().contains("/faces/")) {
+            boolean isNotProtected = false;
+            isNotProtected = isNotProtected || request.getRequestURI().toString().contains("/login.xhtml");
+            isNotProtected = isNotProtected || request.getRequestURI().toString().contains("/register.xhtml");
+            isNotProtected = isNotProtected || request.getRequestURI().toString().contains("/bsod.jsp");
 
-        if (cookie == null || user == null || CKtoken == null) {
-            response.sendRedirect(request.getContextPath() + "/login.xhtml"); // No logged-in user found, so redirect to login page.
-        } else {
-            // Ahora debemos verificar que la sesión y el usuario sean correctos:
-            byte[] token = CKtoken.getBytes();
-            boolean valido = autenticador.ValidateUser(user, token);
-            if (valido) {
-                chain.doFilter(req, res); // Logged-in user found, so just continue request.
-            } else {
-                // ¡¡¡No es válido!!!
-                // Alguien nos está engañando (o reiniciamos el servlet)
-                // Es necesario destruir los datos que recibimos...
-                for(Cookie c : cookie){
-                    c.setMaxAge(0);
-                    response.addCookie(c);
+            SessionsBean sb = new SessionsBean();
+            boolean isAutenticado = sb.isAutenticated(request);
+            System.out.println("  Autenticado: " + isAutenticado);
+
+            if (isNotProtected) {
+                if (isAutenticado) {
+                    response.sendRedirect(request.getContextPath() + "/");
+                } else {
+                    chain.doFilter(req, res);
                 }
-                response.sendRedirect(request.getContextPath() + "/login.xhtml");
-            }// fin else de ¿sesión válida?
+            } else {
+                if (!isAutenticado) {
+                    response.sendRedirect(request.getContextPath() + "/login.xhtml");
+                } else {
+                    chain.doFilter(req, res);
+                }
+            }
+        } else {
+            chain.doFilter(req, res);
+        }
+        /*
+         if (cookie == null || user == null || CKtoken == null) {
+         response.sendRedirect(request.getContextPath() + "/login.xhtml"); // No logged-in user found, so redirect to login page.
+         } else {
+         // Ahora debemos verificar que la sesión y el usuario sean correctos:
+         byte[] token = CKtoken.getBytes();
+         boolean valido = autenticador.ValidateUser(user, token);
+         if (valido) {
+         chain.doFilter(req, res); // Logged-in user found, so just continue request.
+         } else {
+         // ¡¡¡No es válido!!!
+         // Alguien nos está engañando (o reiniciamos el servlet)
+         // Es necesario destruir los datos que recibimos...
+         for (Cookie c : cookie) {
+         c.setMaxAge(0);
+         response.addCookie(c);
+         }
+         response.sendRedirect(request.getContextPath() + "/login.xhtml");
+         }// fin else de ¿sesión válida?
 
-        }// fin else de ¿hay sesión?
+         }// fin else de ¿hay sesión?
+         */
     }
 
     @Override

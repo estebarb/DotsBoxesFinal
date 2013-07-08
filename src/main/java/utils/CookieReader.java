@@ -24,10 +24,11 @@ public class CookieReader {
     public static String getCookieValue(Cookie[] cookies,
             String cookieName,
             String defaultValue) {
-        for (int i = 0; i < cookies.length; i++) {
-            Cookie cookie = cookies[i];
-            if (cookieName.equals(cookie.getName())) {
-                return (cookie.getValue());
+        if (cookies != null) {
+            for(Cookie c : cookies){
+                if (cookieName.equals(c.getName())) {
+                    return (c.getValue());
+                }
             }
         }
         return (defaultValue);

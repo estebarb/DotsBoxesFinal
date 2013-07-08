@@ -1,14 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package filters;
+// Tomado de: http://stackoverflow.com/tags/servlet-filters/info
 
 import cus.Autenticar.Autenticar;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,15 +10,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import utils.CookieReader;
 
-/**
- *
- * @author Esteban
- */
-//@WebFilter(filterName = "NoReloginFilter", urlPatterns = {"/start.jsp"}, servletNames = {"RegisterServlet", "LoginServlet"})
+//@WebFilter(urlPatterns = {"/login.xhtml", "/register.xhtml"})
 public class NoReloginFilter implements Filter {
 
     @Override
@@ -37,25 +28,30 @@ public class NoReloginFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        HttpSession session = request.getSession(true);
+        Cookie[] cookie = request.getCookies();
 
-        if (session == null || session.getAttribute("user") == null || session.getAttribute("token") == null) {
-            // No hay sesión.. se puede seguir
+        Autenticar autenticador = new Autenticar();
+        String user = CookieReader.getCookieValue(cookie, "user", null);
+        String CKtoken = CookieReader.getCookieValue(cookie, "token", null);
+
+        if (cookie == null || user == null || CKtoken == null) {
             chain.doFilter(req, res);
         } else {
-            String reintentar = (String) request.getParameter("retry");
-            if ("true".equalsIgnoreCase(reintentar)) {
-                chain.doFilter(req, res);
+            // Ahora debemos verificar que la sesión y el usuario sean correctos:
+            byte[] token = CKtoken.getBytes();
+            boolean valido = autenticador.ValidateUser(user, token);
+            if (valido) {
+                response.sendRedirect(request.getContextPath() + "/index.xhtml");
             } else {
-                // hay sesión abierta... vaya a la app
-                response.sendRedirect(request.getContextPath());
-            }
+                chain.doFilter(req, res); // Logged-in user found, so just continue request.
+            }// fin else de ¿sesión válida?
 
         }// fin else de ¿hay sesión?
     }
 
     @Override
     public void destroy() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // If you have assigned any expensive resources as field of
+        // this Filter class, then you could clean/close them here.
     }
 }
