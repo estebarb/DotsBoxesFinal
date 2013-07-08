@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/WEB-INF/templates/template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+    <ui:define name="content">
+        <h1>Crear juego</h1>
+        <h:form>
+            <div class="row">
+                <div class="span6">
+                    <h2>Dimensiones del tablero</h2>
+                    <div>
+                    <h:outputLabel for="gameWidth" value="Columnas"/>
+                    <h:message for="gameWidth" style="color:red;"/>
+                    <h:inputText id="gameWidth" value="6" required="true" requiredMessage="Es necesario especificar el ancho">
+                        <f:validateLongRange minimum="4" maximum="20"/>
+                    </h:inputText>
+                    </div><div>
+                    <h:outputLabel for="gameHeight" value="Filas"/>
+                    <h:message for="gameHeight" style="color:red;"/>
+                    <h:inputText id="gameHeight" value="6" required="true" requiredMessage="Es necesario especificar la altura">
+                        <f:validateLongRange minimum="4" maximum="20"/>
+                    </h:inputText>
+                    </div>
+                </div>
+                <div class="span6">
+                    <h2>Jugadores</h2>
+                    <h:dataTable value="#{NuevoJue.jugadores}"
+                </div>
+            </div>
+            <h:button value="¡Iniciar Juego!" class="btn btn-large btn-info"/>
+        </h:form>
+    </ui:define>
+</ui:composition>
