@@ -11,22 +11,85 @@
                 <div class="span6">
                     <h2>Dimensiones del tablero</h2>
                     <div>
-                    <h:outputLabel for="gameWidth" value="Columnas"/>
-                    <h:message for="gameWidth" style="color:red;"/>
-                    <h:inputText id="gameWidth" value="6" required="true" requiredMessage="Es necesario especificar el ancho">
-                        <f:validateLongRange minimum="4" maximum="20"/>
-                    </h:inputText>
+                        <h:outputLabel for="gameWidth" value="Columnas"/>
+                        <h:message for="gameWidth" style="color:red;"/>
+                        <h:inputText id="gameWidth" value="#{nuevoJuegoBean.columnas}" required="true" requiredMessage="Es necesario especificar el ancho">
+                            <f:validateLongRange minimum="4" maximum="20"/>
+                        </h:inputText>
                     </div><div>
-                    <h:outputLabel for="gameHeight" value="Filas"/>
-                    <h:message for="gameHeight" style="color:red;"/>
-                    <h:inputText id="gameHeight" value="6" required="true" requiredMessage="Es necesario especificar la altura">
-                        <f:validateLongRange minimum="4" maximum="20"/>
-                    </h:inputText>
+                        <h:outputLabel for="gameHeight" value="Filas"/>
+                        <h:message for="gameHeight" style="color:red;"/>
+                        <h:inputText id="gameHeight" value="#{nuevoJuegoBean.filas}" required="true" requiredMessage="Es necesario especificar la altura">
+                            <f:validateLongRange minimum="4" maximum="20"/>
+                        </h:inputText>
                     </div>
                 </div>
                 <div class="span6">
                     <h2>Jugadores</h2>
-                    <h:dataTable value="#{NuevoJue.jugadores}"
+                    <div class="row">
+                        <!-- Agregar Usuario -->
+                        <a href="#modalAddUsuario" role="button" class="btn btn-success" data-toggle="modal">Agregar Usuario</a>
+                        <div id="modalAddUsuario" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalAddUsuarioLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="modalAddUsuarioLabel">Agregar Usuario</h3>
+                            </div>
+                            <div class="modal-body">
+                                <p>Indique el correo electrónico del usuario que desea agregar:</p>
+                                <h:inputText id="addUserMail" value="#{nuevoJuegoBean.identificadorJugador}"/>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+                                <h:commandButton class="btn btn-primary" value="Agregar" action="#{nuevoJuegoBean.AddUsuario}">
+                                    <f:ajax execute="addUserMail" render="tablaJugadores"/> 
+                                </h:commandButton>
+                            </div>
+                        </div>
+                        <!-- Agregar Máquina -->
+                        <!-- Agregar Equipo -->
+                        <!-- Fin agregar jugadores -->
+                    </div>
+                    <div class="row">
+                        <h:dataTable
+                            value="#{nuevoJuegoBean.jugadores}" var="jugador"
+                            class="table table-hover"
+                            id="tablaJugadores"
+                            >
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Nombre"></h:outputText>
+                                </f:facet>
+                                <h:outputText value="#{jugador.nombre}"></h:outputText>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Tipo"></h:outputText>
+                                </f:facet>
+                                <h:outputText value="#{jugador.STipo}"></h:outputText>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Ranking"></h:outputText>
+                                </f:facet>
+                                <h:outputText value="#{jugador.ranking}"></h:outputText>
+                            </h:column>
+                            <h:column>
+                                <!-- action="# {holaMundo.removeValor(dato)}" -->
+                                <h:commandButton 
+                                    value="Subir"></h:commandButton>
+                            </h:column>
+                            <h:column>
+                                <!-- action="# {holaMundo.removeValor(dato)}" -->
+                                <h:commandButton 
+                                    value="Bajar"></h:commandButton>
+                            </h:column>
+                            <h:column>
+                                <!-- action="# {holaMundo.removeValor(dato)}" -->
+                                <h:commandButton 
+                                    value="Borrar"></h:commandButton>
+                            </h:column>
+                        </h:dataTable>
+                    </div>
                 </div>
             </div>
             <h:button value="¡Iniciar Juego!" class="btn btn-large btn-info"/>

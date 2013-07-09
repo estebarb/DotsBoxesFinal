@@ -8,8 +8,9 @@ package cus.Jugar;
  *
  * @author Esteban
  */
-public abstract class Jugador {
-    private String nombre;
-    private String descripcion;
-    private 
+public enum EPlayerTypes {
+    Human,
+    AI,
+    Team,
+    GameWinner;
 }
