@@ -6,9 +6,11 @@
 window.addEventListener("load", function() {
     var canvas = document.getElementById('gameCanvas'),
             context = canvas.getContext('2d');
+    var MousePosition = {x: 0, y: 0};
 
     // resize the canvas to fill browser window dynamically
     window.addEventListener('resize', resizeCanvas, false);
+    canvas.addEventListener('mousemove', MoveMouse, false);
 
     function resizeCanvas() {
         var ancho = document.getElementById("gameDiv").getBoundingClientRect().width;
@@ -23,6 +25,19 @@ window.addEventListener("load", function() {
         paint();
     }
     resizeCanvas();
+
+    function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
+    }
+
+    function MoveMouse(evt) {
+        MousePosition = getMousePos(canvas, evt);
+        paint();
+    }
 
     function paint() {
         var ancho = document.getElementById("gameDiv").getBoundingClientRect().width;
@@ -51,6 +66,8 @@ window.addEventListener("load", function() {
             return margen + y * (altoCuadro + altoBorde);
         };
 
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
         // Primero dibuja los puntos:
         context.fillStyle = "black";
         for (y = 0; y <= filas; y++) {
@@ -65,29 +82,41 @@ window.addEventListener("load", function() {
 
         // Ahora dibuja las líneas que ya fueron puestas:
         var lineData = $.parseJSON(document.getElementById("lineData").value);
+
+        var DibujaLinea = function(color, posx, posy, width, height, mp) {
+            context.fillStyle = colores[color];
+            context.fillRect(posx, posy, width, height);
+            if (color === 0 &&
+                    posx < mp.x && mp.x < posx + width &&
+                    posy < mp.y && mp.y < posy + height) {
+                // Si el cursor está en la zona entonces se marca...
+                context.fillStyle = "black";
+                context.strokeStyle = "black";
+                context.fillRect(posx, posy, width, height);
+            }
+        };
+
         var i = 0;
         context.fillStyle = "white";
-        for (y = 0; y <= filas; y++) {
-            for (x = 0; x <= columnas; x++) {
+        for (y = 0; y < filas; y++) {
+            for (x = 0; x < columnas; x++) {
+                var valor = lineData[i];
                 if (lineData !== null && lineData.length > i) {
-                    var valor = lineData[i];
                     valor[0] = parseInt(valor[0]);
                     valor[1] = parseInt(valor[1]);
                     valor[2] = parseInt(valor[2]);
                     valor[3] = parseInt(valor[3]);
-                    // Arriba:
-                    context.fillStyle = colores[valor[0]];
-                    context.fillRect(PosX(x) + anchoBorde, PosY(y), anchoCuadro, altoBorde);
-                    // Derecha
-                    context.fillStyle = colores[valor[1]];
-                    context.fillRect(PosX(x+1), PosY(y) + altoBorde, anchoBorde, altoCuadro);
-                    // Abajo
-                    context.fillStyle = colores[valor[2]];
-                    context.fillRect(PosX(x) + anchoBorde, PosY(y+1), anchoCuadro, altoBorde);
-                    // Izquierda
-                    context.fillStyle = colores[valor[3]];
-                    context.fillRect(PosX(x), PosY(y) + altoBorde, anchoBorde, altoCuadro);
+                } else {
+                    valor = [0,0,0,0];
                 }
+                // Arriba:
+                DibujaLinea(valor[0], PosX(x) + anchoBorde, PosY(y), anchoCuadro, altoBorde, MousePosition);
+                // Derecha
+                DibujaLinea(valor[1], PosX(x + 1), PosY(y) + altoBorde, anchoBorde, altoCuadro, MousePosition);
+                // Abajo
+                DibujaLinea(valor[2], PosX(x) + anchoBorde, PosY(y + 1), anchoCuadro, altoBorde, MousePosition);
+                // Izquierda
+                DibujaLinea(valor[3], PosX(x), PosY(y) + altoBorde, anchoBorde, altoCuadro, MousePosition);
                 i++;
             }
         }
