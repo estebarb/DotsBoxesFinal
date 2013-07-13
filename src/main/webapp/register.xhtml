@@ -1,23 +1,12 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
-    <h:head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
-        <title>Dots &amp; Boxes</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css"/>
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/2.3.2/cosmo/bootstrap.min.css"/>
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-    </h:head>
-    <h:body>
-        <div class="container">
-            <div class="hero-unit">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/WEB-INF/templates/nologintemplate.xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+    <ui:define name="content">
+        <div class="hero-unit">
                 <h1>Bienvenidos a Dots &amp; Boxes</h1>
                 <p>Este es un divertido juego para dos o más jugadores, donde
                     gana quien completa más cuadrados.</p>
@@ -28,7 +17,7 @@
                     <div class="row">
                         <c:if test="#{facesContext.messageList != null and facesContext.messageList.size() > 0}">
                             <div class='alert alert-warning'>
-                                <button type='button' class='close' data-dismiss='alert'>&times;</button>
+                                <button type='button' class='close' data-dismiss='alert'>&amp;times;</button>
                                 <h2>¡Hubo errores con su solicitud!</h2>
                                 <p>Por favor corrija los errores indicados antes de continuar.</p>
                                 <h:messages globalOnly="true"/>
@@ -79,7 +68,5 @@
                     </h:form>
                 </div>
             </div>
-            <ui:include src="/app/partials/footer.xhtml"/>
-        </div>
-    </h:body>
-</html>
+    </ui:define>
+</ui:composition>
