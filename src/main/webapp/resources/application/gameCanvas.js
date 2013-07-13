@@ -4,24 +4,29 @@
  */
 
 window.addEventListener("load", function() {
-    var canvas = document.getElementById('gameCanvas'),
-            context = canvas.getContext('2d');
+    var canvas = $('#gameCanvas')[0];
+    var context = canvas.getContext('2d');
     var MousePosition = {x: 0, y: 0};
+    var gameDiv = $('#gameDiv')[0];
 
     // resize the canvas to fill browser window dynamically
-    window.addEventListener('resize', resizeCanvas, false);
-    canvas.addEventListener('mousemove', MoveMouse, false);
+    $(window).resize(resizeCanvas);
+    $(canvas).mousemove(MoveMouse);
+
+    var txtSize = $('#sizeData')[0];
+    var txtLineData = $('#lineData')[0];
+    var txtBoxData = $('#boxData')[0];
+
+    $(txtSize).change(paint);
+    $(txtLineData).change(paint);
+    $(txtBoxData).change(paint);
 
     function resizeCanvas() {
-        var ancho = document.getElementById("gameDiv").getBoundingClientRect().width;
-        var alto = window.innerHeight - document.getElementById("gameDiv").getBoundingClientRect().top;
+        var ancho = gameDiv.getBoundingClientRect().width;
+        var alto = window.innerHeight - gameDiv.getBoundingClientRect().top;
         canvas.width = ancho;
         canvas.height = Math.min(ancho, alto * 0.7);
 
-        /**
-         * Your drawings need to be inside this function otherwise they will be reset when 
-         * you resize the browser window and the canvas goes will be cleared.
-         */
         paint();
     }
     resizeCanvas();
@@ -40,12 +45,12 @@ window.addEventListener("load", function() {
     }
 
     function paint() {
-        var ancho = document.getElementById("gameDiv").getBoundingClientRect().width;
-        var alto = window.innerHeight - document.getElementById("gameDiv").getBoundingClientRect().top;
+        var ancho = gameDiv.getBoundingClientRect().width;
+        var alto = window.innerHeight - gameDiv.getBoundingClientRect().top;
         alto = Math.min(ancho, alto * 0.7);
 
         // Tamaño de la cuadrícula
-        var sizeData = document.getElementById("sizeData").value.split(",");
+        var sizeData = txtSize.value.split(",");
         var columnas = parseInt(sizeData[0]);
         var filas = parseInt(sizeData[1]);
 
@@ -81,7 +86,7 @@ window.addEventListener("load", function() {
             "#B307FF", "#A36953", "#45FFB8", "#FFC100"];
 
         // Ahora dibuja las líneas que ya fueron puestas:
-        var lineData = $.parseJSON(document.getElementById("lineData").value);
+        var lineData = $.parseJSON(txtLineData.value);
 
         var DibujaLinea = function(color, posx, posy, width, height, mp) {
             context.fillStyle = colores[color];
@@ -107,7 +112,7 @@ window.addEventListener("load", function() {
                     valor[2] = parseInt(valor[2]);
                     valor[3] = parseInt(valor[3]);
                 } else {
-                    valor = [0,0,0,0];
+                    valor = [0, 0, 0, 0];
                 }
                 // Arriba:
                 DibujaLinea(valor[0], PosX(x) + anchoBorde, PosY(y), anchoCuadro, altoBorde, MousePosition);
@@ -122,11 +127,11 @@ window.addEventListener("load", function() {
         }
 
         // Y dibuja las cajas rellenas
-        var boxData = document.getElementById("boxData").value.split(",");
+        var boxData = txtBoxData.value.split(",");
         i = 0;
         context.fillStyle = "white";
-        for (y = 0; y <= filas; y++) {
-            for (x = 0; x <= columnas; x++) {
+        for (y = 0; y < filas; y++) {
+            for (x = 0; x < columnas; x++) {
                 if (boxData !== null && boxData.length > i) {
                     context.fillStyle = colores[parseInt(boxData[i])];
                     context.fillRect(PosX(x) + anchoBorde, PosY(y) + altoBorde, anchoCuadro, altoCuadro);
