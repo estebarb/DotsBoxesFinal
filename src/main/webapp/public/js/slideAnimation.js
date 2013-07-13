@@ -1,0 +1,1 @@
+$(document).ready(function(){$("#contenido").css("display", "none");$("#contenido").fadeIn(700);});

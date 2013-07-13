@@ -1,7 +1,8 @@
+package filters;
+
 // Tomado de: http://stackoverflow.com/tags/servlet-filters/info
 
 import beans.SessionsBean;
-import cus.Autenticar.Autenticar;
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -11,10 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.CookieReader;
 
 @WebFilter(urlPatterns = {"/*"})
 public class LoginFilter implements Filter {
@@ -31,6 +30,11 @@ public class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         System.out.println("Filtro login: " + request.getRequestURI().toString());
 
+        if(request.getRequestURI().toString().contains("/public/")){
+            chain.doFilter(req, res);
+            return;
+        }
+        
         if (!request.getRequestURI().toString().contains("/faces/")) {
             boolean isNotProtected = false;
             isNotProtected = isNotProtected || request.getRequestURI().toString().contains("/login.xhtml");
@@ -39,7 +43,6 @@ public class LoginFilter implements Filter {
 
             SessionsBean sb = new SessionsBean();
             boolean isAutenticado = sb.isAutenticated(request);
-            System.out.println("  Autenticado: " + isAutenticado);
 
             if (isNotProtected) {
                 if (isAutenticado) {
@@ -57,28 +60,6 @@ public class LoginFilter implements Filter {
         } else {
             chain.doFilter(req, res);
         }
-        /*
-         if (cookie == null || user == null || CKtoken == null) {
-         response.sendRedirect(request.getContextPath() + "/login.xhtml"); // No logged-in user found, so redirect to login page.
-         } else {
-         // Ahora debemos verificar que la sesión y el usuario sean correctos:
-         byte[] token = CKtoken.getBytes();
-         boolean valido = autenticador.ValidateUser(user, token);
-         if (valido) {
-         chain.doFilter(req, res); // Logged-in user found, so just continue request.
-         } else {
-         // ¡¡¡No es válido!!!
-         // Alguien nos está engañando (o reiniciamos el servlet)
-         // Es necesario destruir los datos que recibimos...
-         for (Cookie c : cookie) {
-         c.setMaxAge(0);
-         response.addCookie(c);
-         }
-         response.sendRedirect(request.getContextPath() + "/login.xhtml");
-         }// fin else de ¿sesión válida?
-
-         }// fin else de ¿hay sesión?
-         */
     }
 
     @Override
