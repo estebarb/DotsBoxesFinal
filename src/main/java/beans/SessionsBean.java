@@ -62,7 +62,7 @@ public class SessionsBean {
                     ec.addResponseCookie("user", idAsignado.toString(), null);
                     ec.addResponseCookie("token", token, null);
 
-                    ec.redirect("/index.xhtml");
+                    ec.redirect("/app/index.xhtml");
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("La contraseña dada no es válida o el usuario no existe"));
 

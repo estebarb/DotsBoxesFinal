@@ -36,13 +36,20 @@ public class MUsuarios {
     }
 
     public Usuarios getUserByID(String id) {
-        List<Usuarios> users = em.createNamedQuery("Usuarios.findById")
-                .setParameter("id", Long.parseLong(id))
-                .getResultList();
-        if (users.isEmpty()) {
-            return null;
-        } else {
-            return users.get(0);
+        Usuarios usr = null;
+        try {
+            long idUsuario = Long.parseLong(id);
+            List<Usuarios> users = em.createNamedQuery("Usuarios.findById")
+                    .setParameter("id", idUsuario)
+                    .getResultList();
+            if (users.isEmpty()) {
+                usr = null;
+            } else {
+                usr = users.get(0);
+            }
+        } catch (Exception e) {
+        } finally {
+            return usr;
         }
     }
 

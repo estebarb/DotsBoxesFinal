@@ -1,6 +1,6 @@
 // Tomado de: http://stackoverflow.com/tags/servlet-filters/info
 
-import cus.Autenticar.Autenticar;
+import beans.SessionsBean;
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -10,12 +10,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.CookieReader;
 
-//@WebFilter(urlPatterns = {"/login.xhtml", "/register.xhtml"})
+@WebFilter(urlPatterns = {"/login.xhtml", "/register.xhtml"})
 public class NoReloginFilter implements Filter {
 
     @Override
@@ -28,25 +26,23 @@ public class NoReloginFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        Cookie[] cookie = request.getCookies();
+        System.out.println("Filtro NoReLogin: " + request.getRequestURI().toString());
 
-        Autenticar autenticador = new Autenticar();
-        String user = CookieReader.getCookieValue(cookie, "user", null);
-        String CKtoken = CookieReader.getCookieValue(cookie, "token", null);
 
-        if (cookie == null || user == null || CKtoken == null) {
-            chain.doFilter(req, res);
+        boolean isNoRelogin = false;
+
+        // Determina si es una URL no protegida
+        isNoRelogin = isNoRelogin || request.getRequestURI().toString().contains("/login.xhtml");
+        isNoRelogin = isNoRelogin || request.getRequestURI().toString().contains("/register.xhtml");
+
+        SessionsBean sb = new SessionsBean();
+        boolean isAutenticado = sb.isAutenticated(request);
+
+        if (isNoRelogin && isAutenticado) {
+            response.sendRedirect(request.getContextPath() + "/app/index.xhtml");
         } else {
-            // Ahora debemos verificar que la sesión y el usuario sean correctos:
-            byte[] token = CKtoken.getBytes();
-            boolean valido = autenticador.ValidateUser(user, token);
-            if (valido) {
-                response.sendRedirect(request.getContextPath() + "/index.xhtml");
-            } else {
-                chain.doFilter(req, res); // Logged-in user found, so just continue request.
-            }// fin else de ¿sesión válida?
-
-        }// fin else de ¿hay sesión?
+            chain.doFilter(req, res);
+        }
     }
 
     @Override

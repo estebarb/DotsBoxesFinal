@@ -1,7 +1,6 @@
 package filters;
 
 // Tomado de: http://stackoverflow.com/tags/servlet-filters/info
-
 import beans.SessionsBean;
 import java.io.IOException;
 
@@ -15,7 +14,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebFilter(urlPatterns = {"/*"})
+@WebFilter("/app/*")
 public class LoginFilter implements Filter {
 
     @Override
@@ -30,33 +29,11 @@ public class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         System.out.println("Filtro login: " + request.getRequestURI().toString());
 
-        if(request.getRequestURI().toString().contains("/public/")){
-            chain.doFilter(req, res);
-            return;
-        }
-        
-        if (!request.getRequestURI().toString().contains("/faces/")) {
-            boolean isNotProtected = false;
-            isNotProtected = isNotProtected || request.getRequestURI().toString().contains("/login.xhtml");
-            isNotProtected = isNotProtected || request.getRequestURI().toString().contains("/register.xhtml");
-            isNotProtected = isNotProtected || request.getRequestURI().toString().contains("/bsod.jsp");
+        SessionsBean sb = new SessionsBean();
+        boolean isAutenticado = sb.isAutenticated(request);
 
-            SessionsBean sb = new SessionsBean();
-            boolean isAutenticado = sb.isAutenticated(request);
-
-            if (isNotProtected) {
-                if (isAutenticado) {
-                    response.sendRedirect(request.getContextPath() + "/");
-                } else {
-                    chain.doFilter(req, res);
-                }
-            } else {
-                if (!isAutenticado) {
-                    response.sendRedirect(request.getContextPath() + "/login.xhtml");
-                } else {
-                    chain.doFilter(req, res);
-                }
-            }
+        if (!isAutenticado) {
+            response.sendRedirect(request.getContextPath() + "/login.xhtml");
         } else {
             chain.doFilter(req, res);
         }
