@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/WEB-INF/templates/template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:define name="htmlhead">
+        <meta HTTP-EQUIV="REFRESH" content="0; url=/login.xhtml"/>
+    </ui:define>
+    <ui:define name="header">
+        <div class="hero-unit">
+            <h1>Bienvenidos a Dots &amp; Boxes</h1>
+            <p>Este es un divertido juego para dos o más jugadores, donde
+                gana quien completa más cuadrados.</p>
+        </div>
+    </ui:define>
+    <ui:define name="content">
+        <c:if test="#{userBean.usuarioActual != null}">
+            <h:form>
+                <h1>¡Hola #{userBean.usuarioActual.nombre}!</h1>
+                <a href="/app/index.xhtml" class="btn btn-large btn-primary">Abrir sesión existente</a>
+                <h:commandLink class="btn btn-large btn-info" action="#{sessionsBean.DoLogout()}" value="Conectarse como otro usuario"/>
+            </h:form>
+        </c:if>
+        <c:if test="#{userBean.usuarioActual != null}">
+            <h1>¡Hola!</h1>
+            <a href="/login.xhtml" class="btn btn-large btn-primary">Iniciar sesión</a>
+            <a href="/register.xhtml" class="btn btn-large btn-primary">Registrarse</a>
+        </c:if>
+    </ui:define>
+</ui:composition>

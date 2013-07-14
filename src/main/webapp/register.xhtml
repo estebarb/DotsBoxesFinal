@@ -12,61 +12,61 @@
         </div>
     </ui:define>
     <ui:define name="content">
-        <div class="row">
-            <div class="span6">
-                <div class="row">
-                    <c:if test="#{facesContext.messageList != null and facesContext.messageList.size() > 0}">
-                        <div class='alert alert-warning'>
-                            <button type='button' class='close' data-dismiss='alert'>&#215;</button>
-                            <h2>¡Hubo errores con su solicitud!</h2>
-                            <p>Por favor corrija los errores indicados antes de continuar.</p>
-                            <h:messages globalOnly="true"/>
+            <div class="row">
+                <div class="span6">
+                    <div class="row">
+                        <c:if test="#{facesContext.messageList != null and facesContext.messageList.size() > 0}">
+                            <div class='alert alert-warning'>
+                                <button type='button' class='close' data-dismiss='alert'>&#215;</button>
+                                <h2>¡Hubo errores con su solicitud!</h2>
+                                <p>Por favor corrija los errores indicados antes de continuar.</p>
+                                <h:messages globalOnly="true"/>
+                            </div>
+                        </c:if>
+                    </div>
+                    <div class="row">
+                        <a href="login.xhtml" class="text-center btn btn-primary btn-large">
+                            O inicie sesión con su cuenta existente
+                        </a>
+                    </div>
+                </div>
+                <div class="span6">
+                    <h1>Registrarse</h1>
+                    <h:form id="regForm">
+                        <div class="control-group">
+                            <h:outputLabel for="reg-email" value="Correo electrónico:"/>
+                            <h:message for="reg-email" style="color: red;"/><br/>
+                            <h:inputText id="reg-email" value="#{RegisterBean.email}" 
+                                         validator="#{RegisterBean.checkEmail}" 
+                                         required="true" 
+                                         requiredMessage="Obligatorio"/>
                         </div>
-                    </c:if>
-                </div>
-                <div class="row">
-                    <a href="login.xhtml" class="text-center btn btn-primary btn-large">
-                        O inicie sesión con su cuenta existente
-                    </a>
+                        <div class="control-group">
+                            <h:outputLabel for="reg-name" value="Nombre:"/>
+                            <h:message for="reg-name" style="color: red;"/><br/>
+                            <h:inputText id="reg-name" value="#{RegisterBean.nombre}" required="true" requiredMessage="Obligatorio"/>
+                        </div>
+                        <div class="control-group">
+                            <h:outputLabel for="reg-pass1" value="Contraseña:"/>
+                            <h:message for="reg-pass1" style="color: red;"/><br/>
+                            <h:inputSecret id="reg-pass1" value="#{RegisterBean.password1}" required="true" requiredMessage="Obligatorio">
+                                <f:validateLength minimum="#{RegisterBean.minimalPasswordLenght}" />
+                            </h:inputSecret>
+                        </div>
+                        <div class="control-group">
+                            <h:outputLabel for="reg-pass2" value="Repita su contraseña"/>
+                            <h:message for="reg-pass2" style="color: red;"/><br/>
+                            <h:inputSecret id="reg-pass2" value="#{RegisterBean.password2}" required="true" requiredMessage="Obligatorio">
+                                <f:validateLength minimum="#{RegisterBean.minimalPasswordLenght}"/>
+                            </h:inputSecret>
+                        </div>
+                        <h:message for="registerClient" style="color: red;"/><br/>
+                        <h:commandButton value="Registrarse" styleClass="btn btn-success btn-large"
+                                         action="#{RegisterBean.Register()}"
+                                         id="reg-command"
+                                         />
+                    </h:form>
                 </div>
             </div>
-            <div class="span6">
-                <h1>Registrarse</h1>
-                <h:form id="regForm">
-                    <div class="control-group">
-                        <h:outputLabel for="reg-email" value="Correo electrónico:"/>
-                        <h:message for="reg-email" style="color: red;"/><br/>
-                        <h:inputText id="reg-email" value="#{RegisterBean.email}" 
-                                     validator="#{RegisterBean.checkEmail}" 
-                                     required="true" 
-                                     requiredMessage="Obligatorio"/>
-                    </div>
-                    <div class="control-group">
-                        <h:outputLabel for="reg-name" value="Nombre:"/>
-                        <h:message for="reg-name" style="color: red;"/><br/>
-                        <h:inputText id="reg-name" value="#{RegisterBean.nombre}" required="true" requiredMessage="Obligatorio"/>
-                    </div>
-                    <div class="control-group">
-                        <h:outputLabel for="reg-pass1" value="Contraseña:"/>
-                        <h:message for="reg-pass1" style="color: red;"/><br/>
-                        <h:inputSecret id="reg-pass1" value="#{RegisterBean.password1}" required="true" requiredMessage="Obligatorio">
-                            <f:validateLength minimum="#{RegisterBean.minimalPasswordLenght}" />
-                        </h:inputSecret>
-                    </div>
-                    <div class="control-group">
-                        <h:outputLabel for="reg-pass2" value="Repita su contraseña"/>
-                        <h:message for="reg-pass2" style="color: red;"/><br/>
-                        <h:inputSecret id="reg-pass2" value="#{RegisterBean.password2}" required="true" requiredMessage="Obligatorio">
-                            <f:validateLength minimum="#{RegisterBean.minimalPasswordLenght}"/>
-                        </h:inputSecret>
-                    </div>
-                    <h:message for="registerClient" style="color: red;"/><br/>
-                    <h:commandButton value="Registrarse" styleClass="btn btn-success btn-large"
-                                     action="#{RegisterBean.Register()}"
-                                     id="reg-command"
-                                     />
-                </h:form>
-            </div>
-        </div>
     </ui:define>
 </ui:composition>

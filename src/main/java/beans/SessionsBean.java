@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Cookie;
@@ -26,7 +27,7 @@ import utils.CookieReader;
  * @author Esteban
  */
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class SessionsBean {
 
     private String email;
@@ -83,7 +84,6 @@ public class SessionsBean {
     }
 
     public String DoLogout() {
-        System.out.println("DO LOGOUT");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
         Cookie[] cookies = request.getCookies();
