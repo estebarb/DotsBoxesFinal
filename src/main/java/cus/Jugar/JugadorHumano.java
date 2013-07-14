@@ -7,6 +7,7 @@ package cus.Jugar;
 import beans.UserBean;
 import cus.Autenticar.Autenticar;
 import entities.Juegos;
+import entities.Jugadores;
 import entities.Usuarios;
 import modelo.MUsuarios;
 
@@ -17,6 +18,7 @@ import modelo.MUsuarios;
 public class JugadorHumano extends IJugador{
     
     private Usuarios user;
+    private Jugadores jugador;
     
     public JugadorHumano(){
         this.tipo = EPlayerTypes.Human;
@@ -39,8 +41,7 @@ public class JugadorHumano extends IJugador{
 
     @Override
     public long getId() {
-        MUsuarios muser = new MUsuarios();
-        return muser.getJugadorByUsuario(user).getId();
+        return jugador.getId();
     }
 
     @Override
@@ -57,7 +58,14 @@ public class JugadorHumano extends IJugador{
     public boolean fromString(String s) {
         MUsuarios muser = new MUsuarios();
         user = muser.getUserByEmail(s);
+        jugador = muser.getJugadorByUsuario(user);
         return user != null;
     }
-    
+
+    @Override
+    public boolean fromJugadoresEntity(Jugadores j) {
+        user = j.getUsuario();
+        jugador = j;
+        return true;
+    }    
 }

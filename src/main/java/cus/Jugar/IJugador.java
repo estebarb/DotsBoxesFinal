@@ -5,6 +5,7 @@
 package cus.Jugar;
 
 import entities.Juegos;
+import entities.Jugadores;
 
 /**
  *
@@ -37,6 +38,8 @@ public abstract class IJugador {
     }
     
     public abstract boolean fromString(String s);
+    
+    public abstract boolean fromJugadoresEntity(Jugadores j);
 
     public abstract boolean AddPendiente(Juegos p);
 }
