@@ -1,0 +1,49 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Estado del sistema</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/2.3.2/cosmo/bootstrap.min.css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="hero-unit">
+                <h1>Estado del sistema</h1>
+                Aquí puede ver el estado actual del sistema.
+            </div>
+            <div class="row">
+                <h2>Ver más datos:</h2>
+                <ul>
+                    <li><a href="http://stats.pingdom.com/qikt2b86ybuv/868786">Estadísticas de Pingdom</a></li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h2>Tiempo de respuesta (últimos 30 minutos)</h2>
+                    <iframe src="https://rpm.newrelic.com/public/charts/xjrKSGVYzH" width="500" height="300" scrolling="no" frameborder="no"></iframe>
+                </div>
+                
+            </div>
+            <div class="row span12">
+                    <h2>Tiempo de respuesta (últimas 24 horas)</h2>
+                    <iframe src="https://rpm.newrelic.com/public/charts/4kM2FHSdzwl" width="500" height="300" scrolling="no" frameborder="no"></iframe>
+            </div>
+            <div class="row span12">
+                <h2>Disponibilidad (últimos 7 días)</h2>
+                <iframe src="https://rpm.newrelic.com/public/charts/1x822oK4vKR" width="500" height="300" scrolling="no" frameborder="no"></iframe>
+            </div>
+            <div class="row span12">
+                <h2>Tiempo de respuesta de la base de datos (últimas 24 horas)</h2>
+                <iframe src="https://rpm.newrelic.com/public/charts/7AgQAsjQP0Z" width="500" height="300" scrolling="no" frameborder="no"></iframe>
+            </div>
+        </div>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/public/js/slideAnimation.js"></script>
+    </body>
+</html>
