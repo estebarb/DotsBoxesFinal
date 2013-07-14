@@ -4,6 +4,7 @@
  */
 package modelo;
 
+import entities.Jugadores;
 import java.util.List;
 import javax.persistence.EntityManager;
 import entities.Usuarios;
@@ -60,5 +61,27 @@ public class MUsuarios {
 
     public Usuarios getUserByRequest(HttpServletRequest req) {
         return getUserByCookie(req.getCookies());
+    }
+
+    public Jugadores getJugadorByUsuario(Usuarios user) {
+        Jugadores jug;
+        List<Jugadores> jugs = em.createQuery("select j FROM Jugadores j where j.type = 0 AND j.usuario = :user")
+                .setParameter("user", user)
+                .getResultList();
+        if (!jugs.isEmpty()) {
+            jug = jugs.get(0);
+        } else {
+            // No existe un Jugador para ese ID, entonces hay que hacerlo...
+            em.getTransaction().begin();
+            jug = new Jugadores();
+            jug.setType(0);
+            jug.setUsuario(user);
+            jug.setEquipo(null);
+            jug.setGanador(null);
+            jug.setJugadorpc(null);
+            em.persist(jug);
+            em.getTransaction().commit();
+        }
+        return jug;
     }
 }

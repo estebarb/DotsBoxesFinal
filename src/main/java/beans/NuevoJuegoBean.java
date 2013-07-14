@@ -6,23 +6,27 @@ package beans;
 
 import cus.Jugar.IJugador;
 import cus.Jugar.JugadorHumano;
-import entities.Jugadores;
 import java.util.ArrayList;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
  * @author Esteban
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class NuevoJuegoBean {
 
     private int columnas = 6;
     private int filas = 6;
-    private ArrayList<IJugador> jugadores;
+    private ArrayList<IJugador> jugadores = new ArrayList<>();
     private String IdentificadorJugador;
+    private String IdentificadorMaquina;
 
     public int getColumnas() {
         return columnas;
@@ -56,11 +60,29 @@ public class NuevoJuegoBean {
         this.IdentificadorJugador = IdentificadorJugador;
     }
 
-    public String AddUsuario(String email) {
+    public String getIdentificadorMaquina() {
+        return IdentificadorMaquina;
+    }
+
+    public void setIdentificadorMaquina(String IdentificadorMaquina) {
+        this.IdentificadorMaquina = IdentificadorMaquina;
+    }
+
+    public String AddUsuario() {
         IJugador usuario = new JugadorHumano();
+        String email = getIdentificadorJugador();
+        setIdentificadorJugador("");
         if (usuario.fromString(email)) {
+            // Hay que verificar que el usuario no haya sido agregado anteriormente.
+            for(IJugador j:jugadores){
+                if(j.getId() == usuario.getId()){
+                    FacesContext.getCurrentInstance().addMessage("addUserMail", new FacesMessage("El usuario ya fue agregado"));
+                    return null;
+                }
+            }
             jugadores.add(usuario);
-            IdentificadorJugador = "";
+        } else {
+            FacesContext.getCurrentInstance().addMessage("addUserMail", new FacesMessage("El usuario no existe"));
         }
         return null;
     }
@@ -77,6 +99,25 @@ public class NuevoJuegoBean {
         return null;
     }
 
+    public String OrdenSubir(IJugador j){
+        int a = jugadores.indexOf(j);
+        jugadores.remove(j);
+        jugadores.add(Math.max(0, a-1), j);
+        return null;
+    }
+    
+    public String OrdenBajar(IJugador j){
+        int a = jugadores.indexOf(j);
+        jugadores.remove(j);
+        jugadores.add(Math.min(jugadores.size(), a+1), j);
+        return null;
+    }
+    
+    public String OrdenBorrar(IJugador j){
+        jugadores.remove(j);
+        return null;
+    }
+    
     /**
      * Creates a new instance of NuevoJuegoBean
      */

@@ -86,7 +86,7 @@ public class RegisterUser {
                     login.setEmail(getEmail());
                     login.setPassword(getPassword1());
                     login.DoLogin();
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("/");
+                    return null;
                 }
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Las contraseñas no coinciden."));
@@ -97,10 +97,6 @@ public class RegisterUser {
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(RegisterUser.class.getName()).log(Level.SEVERE, null, ex);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("¡Uups! Al parecer tantas partidas nos han dejado cansados. Necesitamos mantenimiento urgente."));
-        } catch (IOException ex) {
-            Logger.getLogger(RegisterUser.class.getName()).log(Level.SEVERE, null, ex);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(":-( Alguien malvado robó la página principal :''''("));
-
         }
         return null;
     }

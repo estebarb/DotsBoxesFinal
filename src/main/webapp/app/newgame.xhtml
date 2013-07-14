@@ -41,7 +41,6 @@
                             <div class="modal-footer">
                                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
                                 <h:commandButton class="btn btn-primary" value="Agregar" action="#{nuevoJuegoBean.AddUsuario}">
-                                    <f:ajax execute="addUserMail" render="tablaJugadores"/> 
                                 </h:commandButton>
                             </div>
                         </div>
@@ -54,17 +53,24 @@
                             </div>
                             <div class="modal-body">
                                 <p>Indique el nivel de la máquina contra el que desea competir:</p>
-                                PONER NIVELES
+                                <h:selectOneListbox value="#{nuevoJuegoBean.identificadorMaquina}" >
+                                    <f:selectItem itemValue="0" itemLabel="Fácil"/>
+                                    <f:selectItem itemValue="1" itemLabel="Moderado"/>
+                                    <f:selectItem itemValue="2" itemLabel="Dificil"/>
+                                </h:selectOneListbox>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-                                <h:commandButton class="btn btn-primary" value="Agregar" action="#{nuevoJuegoBean.AddMachine}">
+                                <h:commandButton class="btn btn-primary" value="Agregar" action="#{nuevoJuegoBean.AddJugadorIA}">
                                     <f:ajax render="tablaJugadores"/> 
                                 </h:commandButton>
                             </div>
                         </div>
                         <!-- Agregar Equipo -->
                         <!-- Fin agregar jugadores -->
+                    </div>
+                    <div class="row">
+                        <h:message for="addUserMail" class="alert alert-error"/>
                     </div>
                     <div class="row">
                         <h:dataTable
@@ -93,17 +99,20 @@
                             <h:column>
                                 <!-- action="# {holaMundo.removeValor(dato)}" -->
                                 <h:commandButton 
-                                    value="Subir"></h:commandButton>
+                                    value="Subir"
+                                    action="#{nuevoJuegoBean.OrdenSubir(jugador)}"></h:commandButton>
                             </h:column>
                             <h:column>
                                 <!-- action="# {holaMundo.removeValor(dato)}" -->
                                 <h:commandButton 
-                                    value="Bajar"></h:commandButton>
+                                    value="Bajar"
+                                    action="#{nuevoJuegoBean.OrdenBajar(jugador)}"></h:commandButton>
                             </h:column>
                             <h:column>
                                 <!-- action="# {holaMundo.removeValor(dato)}" -->
                                 <h:commandButton 
-                                    value="Borrar"></h:commandButton>
+                                    value="Borrar"
+                                    action="#{nuevoJuegoBean.OrdenBorrar(jugador)}"></h:commandButton>
                             </h:column>
                         </h:dataTable>
                     </div>

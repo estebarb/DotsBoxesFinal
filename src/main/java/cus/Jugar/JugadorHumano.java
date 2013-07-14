@@ -4,13 +4,19 @@
  */
 package cus.Jugar;
 
+import beans.UserBean;
+import cus.Autenticar.Autenticar;
 import entities.Juegos;
+import entities.Usuarios;
+import modelo.MUsuarios;
 
 /**
  *
  * @author Esteban
  */
 public class JugadorHumano extends IJugador{
+    
+    private Usuarios user;
     
     public JugadorHumano(){
         this.tipo = EPlayerTypes.Human;
@@ -23,22 +29,23 @@ public class JugadorHumano extends IJugador{
 
     @Override
     public String getNombre() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return user.getNombre();
     }
 
     @Override
     public int getRanking() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return user.getRanking();
     }
 
     @Override
     public long getId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        MUsuarios muser = new MUsuarios();
+        return muser.getJugadorByUsuario(user).getId();
     }
 
     @Override
     public EPlayerTypes getTipo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return EPlayerTypes.Human;
     }
 
     /**
@@ -48,7 +55,9 @@ public class JugadorHumano extends IJugador{
      */
     @Override
     public boolean fromString(String s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        MUsuarios muser = new MUsuarios();
+        user = muser.getUserByEmail(s);
+        return user != null;
     }
     
 }
