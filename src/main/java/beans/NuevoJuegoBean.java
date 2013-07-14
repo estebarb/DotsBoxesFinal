@@ -5,15 +5,18 @@
 package beans;
 
 import cus.Jugar.IJugador;
+import cus.Jugar.JugadorBot;
 import cus.Jugar.JugadorHumano;
 import entities.Jugadores;
 import entities.Usuarios;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import modelo.MJuego;
 import modelo.MUsuarios;
 
 /**
@@ -92,7 +95,14 @@ public class NuevoJuegoBean {
     }
 
     public String AddJugadorIA() {
-        System.out.println("Valor leído: " + IdentificadorMaquina);
+        IJugador maquina = new JugadorBot();
+        String nivel = getIdentificadorMaquina();
+        setIdentificadorMaquina("");
+        if (maquina.fromString(nivel)) {
+            jugadores.add(maquina);
+        } else {
+            FacesContext.getCurrentInstance().addMessage("addUserMachine", new FacesMessage("Máquina inválida"));
+        }
         return null;
     }
 
@@ -138,5 +148,25 @@ public class NuevoJuegoBean {
         JugadorHumano jh = new JugadorHumano();
         jh.fromJugadoresEntity(jugadorActual);
         jugadores.add(jh);
+    }
+
+    /**
+     * Se encarga de crear el juego en la base de datos...
+     *
+     * @return
+     */
+    public String CrearJuego() {
+        if (jugadores.size() < 2) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Debe haber al menos 2 jugadores."));
+            return null;
+        }
+        MJuego mjuego = new MJuego();
+        if (!mjuego.CrearJuego(filas, columnas, new Date(), null, jugadores)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al crear el juego"));
+            return null;
+        }
+
+        return "/app/play";
+
     }
 }

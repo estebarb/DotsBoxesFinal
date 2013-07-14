@@ -21,6 +21,8 @@ public abstract class IJugador {
     public abstract long getId();
 
     public abstract EPlayerTypes getTipo();
+    
+    public abstract Jugadores getJUGADOR();
 
     public String getSTipo() {
         switch (tipo) {

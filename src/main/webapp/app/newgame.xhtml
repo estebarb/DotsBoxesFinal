@@ -3,7 +3,8 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 template="/WEB-INF/templates/template.xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core">
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
     <ui:define name="content">
         <h1>Crear juego</h1>
         <h:form>
@@ -54,9 +55,9 @@
                             <div class="modal-body">
                                 <p>Indique el nivel de la máquina contra el que desea competir:</p>
                                 <h:selectOneListbox value="#{nuevoJuegoBean.identificadorMaquina}" >
-                                    <f:selectItem itemValue="0" itemLabel="Fácil"/>
-                                    <f:selectItem itemValue="1" itemLabel="Moderado"/>
-                                    <f:selectItem itemValue="2" itemLabel="Dificil"/>
+                                    <f:selectItem itemValue="easy" itemLabel="Fácil"/>
+                                    <f:selectItem itemValue="medium" itemLabel="Moderado"/>
+                                    <f:selectItem itemValue="hard" itemLabel="Dificil"/>
                                 </h:selectOneListbox>
                             </div>
                             <div class="modal-footer">
@@ -95,19 +96,16 @@
                                 <h:outputText value="#{jugador.ranking}"></h:outputText>
                             </h:column>
                             <h:column>
-                                <!-- action="# {holaMundo.removeValor(dato)}" -->
                                 <h:commandButton 
                                     value="Subir"
                                     action="#{nuevoJuegoBean.OrdenSubir(jugador)}"></h:commandButton>
                             </h:column>
                             <h:column>
-                                <!-- action="# {holaMundo.removeValor(dato)}" -->
                                 <h:commandButton 
                                     value="Bajar"
                                     action="#{nuevoJuegoBean.OrdenBajar(jugador)}"></h:commandButton>
                             </h:column>
                             <h:column>
-                                <!-- action="# {holaMundo.removeValor(dato)}" -->
                                 <h:commandButton 
                                     value="Borrar"
                                     action="#{nuevoJuegoBean.OrdenBorrar(jugador)}"></h:commandButton>
@@ -116,7 +114,8 @@
                     </div>
                 </div>
             </div>
-            <h:button value="¡Iniciar Juego!" class="btn btn-large btn-info"/>
+            <h:commandButton value="¡Iniciar Juego!" class="btn btn-large btn-info" action="#{nuevoJuegoBean.CrearJuego}">
+            </h:commandButton>
         </h:form>
     </ui:define>
 </ui:composition>

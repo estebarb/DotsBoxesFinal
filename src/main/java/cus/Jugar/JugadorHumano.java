@@ -8,25 +8,26 @@ import beans.UserBean;
 import cus.Autenticar.Autenticar;
 import entities.Juegos;
 import entities.Jugadores;
+import entities.Pendientes;
 import entities.Usuarios;
+import java.util.List;
+import javax.persistence.EntityManager;
 import modelo.MUsuarios;
+import utils.EMF;
 
 /**
  *
  * @author Esteban
  */
-public class JugadorHumano extends IJugador{
-    
+public class JugadorHumano extends IJugador {
+
     private Usuarios user;
     private Jugadores jugador;
-    
-    public JugadorHumano(){
-        this.tipo = EPlayerTypes.Human;
-    }
+    private EntityManager em;
 
-    @Override
-    public boolean AddPendiente(Juegos p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public JugadorHumano() {
+        this.tipo = EPlayerTypes.Human;
+        em = EMF.createEntityManager();
     }
 
     @Override
@@ -51,8 +52,9 @@ public class JugadorHumano extends IJugador{
 
     /**
      * Llena los datos del usuario a partir de un correo electrónico
+     *
      * @param s
-     * @return 
+     * @return
      */
     @Override
     public boolean fromString(String s) {
@@ -67,5 +69,32 @@ public class JugadorHumano extends IJugador{
         user = j.getUsuario();
         jugador = j;
         return true;
-    }    
+    }
+
+    @Override
+    public Jugadores getJUGADOR() {
+        return jugador;
+    }
+
+    @Override
+    public boolean AddPendiente(Juegos p) {
+        Pendientes pendiente = (Pendientes) em.createQuery("select p from Pendientes p WHERE p.juego = :juego AND p.jugador = :jugador")
+                .setParameter("juego", p)
+                .setParameter("jugador", jugador)
+                .getSingleResult();
+        List<Pendientes> todos = em.createQuery("select p from Pendientes p WHERE p.juego = :juego")
+                .setParameter("juego", p)
+                .getResultList();
+        
+        
+        em.getTransaction().begin();
+        for(Pendientes pj : todos){
+            pj.setTurno(false);
+            em.persist(pj);
+        }
+        pendiente.setTurno(true);
+        em.persist(pendiente);
+        em.getTransaction().commit();
+        return true;
+    }
 }
