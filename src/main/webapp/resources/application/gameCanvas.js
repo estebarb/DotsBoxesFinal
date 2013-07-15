@@ -24,14 +24,18 @@ window.addEventListener("load", function() {
     $(txtLineData).change(paint);
     $(txtBoxData).change(paint);
     $(txtIsTurno).change(paint);
-    
-    function UpdateData(){
+
+    function UpdateData() {
         $('#updateData').click();
+        paint();
     }
     setInterval(UpdateData, 1000);
-    
-    function doMove(){
-        $('#sendMove').click();
+
+    function doMove() {
+        var txtIsTurno = $('#isTurno')[0];
+        if (txtIsTurno.value == "true") {
+            $('#sendMove').click();
+        }
     }
 
     function resizeCanvas() {
@@ -58,6 +62,13 @@ window.addEventListener("load", function() {
     }
 
     function paint() {
+        var txtSize = $('#sizeData')[0];
+        var txtLineData = $('#lineData')[0];
+        var txtBoxData = $('#boxData')[0];
+        var txtIsTurno = $('#isTurno')[0];
+        var txtSendMove = $('#moveData')[0];
+
+
         var ancho = gameDiv.getBoundingClientRect().width;
         var alto = window.innerHeight - gameDiv.getBoundingClientRect().top;
         alto = Math.min(ancho, alto * 0.7);
@@ -99,14 +110,14 @@ window.addEventListener("load", function() {
             "#B307FF", "#A36953", "#45FFB8", "#FFC100"];
 
         // Ahora dibuja las líneas que ya fueron puestas:
-        var lineData = $.parseJSON(txtLineData.value);
-        var isTurnoAhora = parseInt(txtIsTurno.value);
+        var LinesData = $.parseJSON(txtLineData.value);
+        var isTurnoAhora = txtIsTurno.value === "true" ? true : false;
 
         var DibujaLinea = function(color, posx, posy, width, height, mp) {
             context.fillStyle = colores[color];
             context.fillRect(posx, posy, width, height);
             if (color === 0 &&
-                    isTurnoAhora === 1 &&
+                    isTurnoAhora === true &&
                     posx < mp.x && mp.x < posx + width &&
                     posy < mp.y && mp.y < posy + height) {
                 // Si el cursor está en la zona entonces se marca...
@@ -128,8 +139,8 @@ window.addEventListener("load", function() {
         context.fillStyle = "white";
         for (y = 0; y < filas; y++) {
             for (x = 0; x < columnas; x++) {
-                var valor = lineData[i];
-                if (lineData !== null && lineData.length > i) {
+                var valor = LinesData[i];
+                if (LinesData !== null && LinesData.length > i) {
                     valor[0] = parseInt(valor[0]);
                     valor[1] = parseInt(valor[1]);
                     valor[2] = parseInt(valor[2]);

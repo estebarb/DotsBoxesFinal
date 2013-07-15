@@ -21,14 +21,18 @@ public class RandomBot implements IMachineBot {
         int movida;
         Random rnd = new Random();
         MJuego juego = new MJuego();
-        for(movida = rnd.nextInt(largo); movida < largo; movida=(movida+1)%largo){
+        int j = 0;
+        for(movida = rnd.nextInt(largo); j < largo; movida=(movida+1)%largo){
             for(int i = 0; i < 4; i++){
                 if(data[movida*5 + i] == 0){
+                    //System.out.println("Randombot jugo en " + movida + "/"+ i);
                     juego.Jugar(p, movida, i);
+                    return true;
                 }
             }
+            j++;
         }
-        return true;
+        return false;
     }
     
 }

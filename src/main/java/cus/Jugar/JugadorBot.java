@@ -111,7 +111,7 @@ public class JugadorBot extends IJugador {
         } else {
             bot = new InteligenteBot();
         }
-                
+               System.out.println("JugadorBot.AddPendiente... va a jugar");
         return bot.Jugar(p);
     }
 

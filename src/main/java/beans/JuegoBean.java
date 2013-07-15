@@ -77,11 +77,17 @@ public class JuegoBean {
     }
 
     public boolean getIsTurno() {
+        //System.out.println("Es el turno de: " + JugadorActual.getNombre());
+        //System.out.println("    " + JugadorActual.getSTipo());
         try {
-            if (JugadorActual.getTipo() == EPlayerTypes.Human) {
-                return JugadorActual.getJUGADOR().getUsuario().getId() == usuario.getId();
+            if (JugadorActual.getTipo().compareTo(EPlayerTypes.Human) == 0) {
+                return JugadorActual.getJUGADOR().getUsuario().getEmail().equals(usuario.getEmail());
+                //return JugadorActual.getJUGADOR().getUsuario().getId() == usuario.getId();
             }
-        } finally {
+            return false;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            //e.printStackTrace();
             return false;
         }
     }
@@ -131,18 +137,22 @@ public class JuegoBean {
         // movida = BoxNumber*4 + lineNumber
         // con line number = 0,1,2,3 según sea norte, este, sur, oeste
         try {
-            System.out.println("hubo movida: " + movida);
-            int mov = Integer.parseInt(movida);
-            int BoxNumber = mov / 4;
-            int LineNumber = mov % 4;
-            Juegos juegoNuevo = mjuego.Jugar(juego, BoxNumber, LineNumber);
-            InitFromJuego(juegoNuevo);
+            if (getIsTurno()) {
+                System.out.println("hubo movida: " + movida);
+                int mov = Integer.parseInt(movida);
+                int BoxNumber = mov / 4;
+                int LineNumber = mov % 4;
+                System.out.println("mjuego.Jugar");
+                Juegos juegoNuevo = mjuego.Jugar(juego, BoxNumber, LineNumber);
+                System.out.println("InitFromJuego");
+                InitFromJuego(juegoNuevo);
+            }
         } finally {
             return null;
         }
     }
-    
-    public String UpdateData(){
+
+    public String UpdateData() {
         return null;
     }
 

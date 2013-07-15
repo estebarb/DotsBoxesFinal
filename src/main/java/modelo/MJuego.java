@@ -17,6 +17,7 @@ import entities.Usuarios;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import utils.EMF;
@@ -130,6 +131,7 @@ public class MJuego {
             return juego;
         } catch (Exception e) {
             System.err.println(e.toString());
+            e.printStackTrace();
             em.getTransaction().rollback();
             return null;
         }
@@ -139,6 +141,7 @@ public class MJuego {
         byte[] data = juego.getTablero();
 
         if (isJugadaValida(juego, BoxNumber, LineNumber)) {
+            System.out.println("@MJuego.Jugar: isValida = true");
             juego = commitJugada(juego, BoxNumber, LineNumber);
         }
         return juego;
@@ -152,9 +155,10 @@ public class MJuego {
 
     /**
      * Determina si se completó una caja
+     *
      * @param data
      * @param BoxNumber
-     * @return 
+     * @return
      */
     private boolean testBox(byte[] data, int BoxNumber) {
         return data[BoxNumber * 5] != 0
@@ -168,43 +172,65 @@ public class MJuego {
         byte[] data = juego.getTablero();
 
         // Se agregan la jugada a los datos---
-
+        numJugadorActual++;
         data[BoxNumber * 5 + LineNumber] = numJugadorActual;
         int filaUsada = BoxNumber / juego.getColumnas();
         int columnaUsada = BoxNumber % juego.getColumnas();
         int filas = juego.getFilas();
         int columnas = juego.getColumnas();
         int cajasLlenas = testBox(data, BoxNumber) ? 1 : 0;
+        if (testBox(data, BoxNumber)) {
+            data[BoxNumber * 5 + 4] = numJugadorActual;
+        }
         switch (LineNumber) {
             case 0: // norte
                 if (filaUsada != 0) {
                     data[(BoxNumber - columnas) * 5 + 2] = numJugadorActual;
-                    cajasLlenas = testBox(data, BoxNumber - columnas) ? 1 : 0;
+                    cajasLlenas += testBox(data, BoxNumber - columnas) ? 1 : 0;
+                    if (testBox(data, BoxNumber - columnas)) {
+                        data[(BoxNumber - columnas) * 5 + 4] = numJugadorActual;
+                    }
                 }
+                break;
             case 1: // este
                 if (columnaUsada != columnas - 1) {
                     data[(BoxNumber + 1) * 5 + 3] = numJugadorActual;
-                    cajasLlenas = testBox(data, BoxNumber + 1) ? 1 : 0;
+                    cajasLlenas += testBox(data, BoxNumber + 1) ? 1 : 0;
+                    if (testBox(data, BoxNumber + 1)) {
+                        data[(BoxNumber + 1) * 5 + 4] = numJugadorActual;
+                    }
                 }
+                break;
             case 2: // sur
                 if (filaUsada != filas - 1) {
                     data[(BoxNumber + columnas) * 5 + 0] = numJugadorActual;
-                    cajasLlenas = testBox(data, BoxNumber + columnas) ? 1 : 0;
+                    cajasLlenas += testBox(data, BoxNumber + columnas) ? 1 : 0;
+                    if (testBox(data, BoxNumber + columnas)) {
+                        data[(BoxNumber + columnas) * 5 + 4] = numJugadorActual;
+                    }
                 }
+                break;
             case 3: // oeste
                 if (columnaUsada != 0) {
                     data[(BoxNumber - 1) * 5 + 1] = numJugadorActual;
-                    cajasLlenas = testBox(data, BoxNumber - 1) ? 1 : 0;
+                    cajasLlenas += testBox(data, BoxNumber - 1) ? 1 : 0;
+                    if (testBox(data, BoxNumber - 1)) {
+                        data[(BoxNumber - 1) * 5 + 4] = numJugadorActual;
+                    }
                 }
+                break;
         }
 
-
-        Jugadoresjuego[] jugadoresjuego = (Jugadoresjuego[]) (juego.getJugadoresjuegoCollection().toArray());
-        Jugadoresjuego jj = jugadoresjuego[numJugadorActual];
+        numJugadorActual--;
+        Iterator<Jugadoresjuego> it = juego.getJugadoresjuegoCollection().iterator();
+        for (int i = 0; i < numJugadorActual; i++) {
+            it.next();
+        }
+        Jugadoresjuego jj = it.next();
         boolean isTerminado = false;
         if (cajasLlenas > 0) {
             // Se completó una caja:
-            data[BoxNumber * 5 + 4] = numJugadorActual;
+            //data[BoxNumber * 5 + 4] = numJugadorActual;
 
             jj.setPuntaje(jj.getPuntaje() + cajasLlenas);
             //juego.setTurnoactual(juego.getTurnoactual() - 1);
@@ -213,6 +239,7 @@ public class MJuego {
             int i = 0;
             while (isTerminado && i < data.length) {
                 isTerminado &= (data[i] != 0);
+                i++;
             }
             juego.setIsterminado(isTerminado);
             if (isTerminado) {
@@ -243,42 +270,65 @@ public class MJuego {
                 }
 
                 // Actualiza el juego
+                juego.setTablero(data);
                 em.persist(juego);
                 em.getTransaction().commit();
+            } else {
+                em.getTransaction().begin();
+                em.persist(jj);
+
+                juego.setTablero(data);
+                em.persist(juego);
+                em.getTransaction().commit();
+                IJugador siguienteJugador = IJugadorFromJugadoresJuego(jj);
+                siguienteJugador.AddPendiente(juego);
             }
         } else {
+            //System.out.println("-- 1");
             em.getTransaction().begin();
-            juego.setTurnoactual(juego.getTurnoactual() + 1);
+            int turnoActual = juego.getTurnoactual() + 1;
+            juego.setTurnoactual(turnoActual);
             juego.setTablero(data);
             // Se añade la jugada del próximo jugador como pendiente:
-            numJugadorActual = (byte) (juego.getTurnoactual() % juego.getJugadoresjuegoCollection().size());
-            jj = jugadoresjuego[numJugadorActual];
-
-            IJugador siguienteJugador;
-            switch (jj.getJugador().getType()) {
-                case 0: // Humano
-                    siguienteJugador = new JugadorHumano();
-                    siguienteJugador.fromJugadoresEntity(jj.getJugador());
-                    break;
-                case 1:
-                    siguienteJugador = new JugadorBot();
-                    siguienteJugador.fromJugadoresEntity(jj.getJugador());
-                    break;
-                case 2:
-                //TODO equipo
-                case 3:
-                //TODO tipo "ganador"
-                default:
-                    siguienteJugador = new JugadorBot();
-                    siguienteJugador.fromString("hard");
+            numJugadorActual = (byte) (turnoActual % juego.getJugadoresjuegoCollection().size());
+            it = juego.getJugadoresjuegoCollection().iterator();
+            for (int i = 0; i < numJugadorActual; i++) {
+                it.next();
             }
+            jj = it.next();
+            //System.out.println("-- 2: Jug actual= " + numJugadorActual);
+            IJugador siguienteJugador = IJugadorFromJugadoresJuego(jj);
+            //System.out.println("-- 3: Jug siguiente= " + siguienteJugador.getNombre());
+
+            em.persist(jj);
             em.persist(juego);
-            siguienteJugador.AddPendiente(juego);
 
-
-
+            //System.out.println("El siguiente jugador es: " + siguienteJugador.getNombre() + " tipo " + siguienteJugador.getSTipo());
             em.getTransaction().commit();
+            siguienteJugador.AddPendiente(juego);
         }
         return juego;
+    }
+
+    private IJugador IJugadorFromJugadoresJuego(Jugadoresjuego jj) {
+        IJugador jugador;
+        switch (jj.getJugador().getType()) {
+            case 0: // Humano
+                jugador = new JugadorHumano();
+                jugador.fromJugadoresEntity(jj.getJugador());
+                break;
+            case 1:
+                jugador = new JugadorBot();
+                jugador.fromJugadoresEntity(jj.getJugador());
+                break;
+            case 2:
+            //TODO equipo
+            case 3:
+            //TODO tipo "ganador"
+            default:
+                jugador = new JugadorBot();
+                jugador.fromString("hard");
+        }
+        return jugador;
     }
 }
