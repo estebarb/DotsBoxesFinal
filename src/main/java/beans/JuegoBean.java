@@ -4,10 +4,9 @@
  */
 package beans;
 
-import cus.Jugar.EPlayerTypes;
-import cus.Jugar.IJugador;
+
+import cus.Jugar.*;
 import entities.Juegos;
-import entities.Jugadores;
 import entities.Usuarios;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +148,7 @@ public class JuegoBean {
                 //System.out.println("mjuego.Jugar");
                 Juegos juegoNuevo = mjuego.Jugar(juego, BoxNumber, LineNumber);
                 //System.out.println("InitFromJuego");
-                //InitFromJuego(juegoNuevo);
+                InitFromJuego(juegoNuevo);
                 UpdateData();
             }
         } catch (Exception e) {
@@ -168,6 +167,7 @@ public class JuegoBean {
     }
 
     public String UpdateData() {
+        MJuego mjuego = new MJuego();
         List<Juegos> listaJuegos = em.createQuery("SELECT j FROM Juegos j WHERE j.id = :id")
                 .setParameter("id", juego.getId())
                 .getResultList();
@@ -176,10 +176,19 @@ public class JuegoBean {
         }
         if (!getIsTurno()) {
             em.refresh(juego);
+
+            InitFromJuego(juego);            
         }
-        InitFromJuego(juego);
         return null;
     }
+    
+    public String ForzarJugada(){
+        IMachineBot bot = new InteligenteBot();
+        bot.Jugar(juego);
+        return null;
+    }
+
+    
 
     public int getFilas() {
         return filas;

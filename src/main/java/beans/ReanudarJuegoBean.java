@@ -66,11 +66,14 @@ public class ReanudarJuegoBean {
         EntityManager em = EMF.createEntityManager();
         em.getTransaction().begin();
         for(Jugadoresjuego jug : j.getJugadoresjuegoCollection()){
+            em.merge(jug);
             em.remove(jug);
         }
         for(Pendientes pend : j.getPendientesCollection()){
+            em.merge(pend);
             em.remove(pend);
         }
+        em.merge(j);
         em.remove(j);
         em.getTransaction().commit();
         return null;

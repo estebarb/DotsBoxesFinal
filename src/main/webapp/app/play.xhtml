@@ -27,17 +27,21 @@
                         </h:column>
                     </h:dataTable>
                     <c:if test="#{not juegoBean.juego.isterminado}">
-                    <strong>Es el turno de <em><h:outputText value="#{juegoBean.jugadorActual.nombre}" id="txtJugadorActual"/> (turno <h:outputText value="#{juegoBean.turnoActual + 1}" id="txtTurnoActual"/>)</em></strong>.
+                        <strong>Es el turno de <em><h:outputText value="#{juegoBean.jugadorActual.nombre}" id="txtJugadorActual"/> (turno <h:outputText value="#{juegoBean.turnoActual + 1}" id="txtTurnoActual"/>)</em></strong>.
                     </c:if>
                     <c:if test="#{juegoBean.juego.isterminado}">
                         <strong>El juego ya terminó.</strong>
                     </c:if>
+                    <h:commandButton id="forceUpdate" value="Forzar Jugada" action="#{juegoBean.ForzarJugada}">
+                        <f:ajax
+                            render="isTurno sizeData lineData boxData tablaJugadores txtJugadorActual txtTurnoActual isTerminado" />
+                    </h:commandButton>
                 </div>
                 <div class="span9" id="gameDiv">
                     <canvas id="gameCanvas" width="100%" height="100%">
                         Canvas no está soportado. Por favor utilice un navegador más reciente.
                     </canvas>
-                    <div class="well">
+                    <div class="well" style="display: none; visibility: hidden;">
                         <h:inputTextarea id="isTurno" value="#{juegoBean.isTurno}"/>
                         <h:inputTextarea id="sizeData" value="#{juegoBean.sizeData}"/>
                         <h:inputTextarea id="lineData" value="#{juegoBean.lineData}"/>

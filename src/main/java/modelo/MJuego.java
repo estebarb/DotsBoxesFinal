@@ -236,7 +236,7 @@ public class MJuego {
             isTerminado = true;
             int i = 0;
             while (isTerminado && i < data.length) {
-                isTerminado &= (data[i+4] != 0);
+                isTerminado &= (data[i + 4] != 0);
                 i += 5;
             }
             if (isTerminado) {
@@ -313,7 +313,7 @@ public class MJuego {
         return juego;
     }
 
-    private IJugador IJugadorFromJugadoresJuego(Jugadoresjuego jj) {
+    public IJugador IJugadorFromJugadoresJuego(Jugadoresjuego jj) {
         IJugador jugador;
         switch (jj.getJugador().getType()) {
             case 0: // Humano
