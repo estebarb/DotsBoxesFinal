@@ -5,12 +5,12 @@
     xmlns:ui="http://java.sun.com/jsf/facelets">
         <div class="row">
             <h:form>
-                <div class="span4">
+                <div class="span8">
                     <a href="/app/index.xhtml" class="btn btn-large btn-primary">Inicio</a>
                     <a href="/app/newgame.xhtml" class="btn btn-large btn-success">Crear Juego</a>
                     <a href="/creartorneo" class="btn btn-large btn-info">Crear torneo</a>
                 </div>
-                <h:commandLink value="Cerrar sesión" class="offset5 span2 btn btn-large" action="#{sessionsBean.DoLogout}" />
+                <h:commandLink value="Cerrar sesión" class="btn btn-large" action="#{sessionsBean.DoLogout}" />
             </h:form>
         </div>
 </ui:composition>
