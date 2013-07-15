@@ -163,11 +163,10 @@ public class NuevoJuegoBean {
         }
         MJuego mjuego = new MJuego();
         Juegos nuevoJuego = mjuego.CrearJuego(filas, columnas, new Date(), null, jugadores);
-        if (null != nuevoJuego) {
+        if (null == nuevoJuego) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al crear el juego"));
             return null;
         } else {
-
             FacesContext.getCurrentInstance().getExternalContext()
                     .getRequestMap().put("juego", nuevoJuego);
 

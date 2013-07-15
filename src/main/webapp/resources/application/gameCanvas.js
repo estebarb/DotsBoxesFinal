@@ -12,14 +12,22 @@ window.addEventListener("load", function() {
     // resize the canvas to fill browser window dynamically
     $(window).resize(resizeCanvas);
     $(canvas).mousemove(MoveMouse);
+    $(canvas).click(doMove);
 
     var txtSize = $('#sizeData')[0];
     var txtLineData = $('#lineData')[0];
     var txtBoxData = $('#boxData')[0];
+    var txtIsTurno = $('#isTurno')[0];
+    var txtSendMove = $('#moveData')[0];
 
     $(txtSize).change(paint);
     $(txtLineData).change(paint);
     $(txtBoxData).change(paint);
+    $(txtIsTurno).change(paint);
+    
+    function doMove(){
+        $('#sendMove').click();
+    }
 
     function resizeCanvas() {
         var ancho = gameDiv.getBoundingClientRect().width;
@@ -87,17 +95,27 @@ window.addEventListener("load", function() {
 
         // Ahora dibuja las líneas que ya fueron puestas:
         var lineData = $.parseJSON(txtLineData.value);
+        var isTurnoAhora = parseInt(txtIsTurno.value);
 
         var DibujaLinea = function(color, posx, posy, width, height, mp) {
             context.fillStyle = colores[color];
             context.fillRect(posx, posy, width, height);
             if (color === 0 &&
+                    isTurnoAhora === 1 &&
                     posx < mp.x && mp.x < posx + width &&
                     posy < mp.y && mp.y < posy + height) {
                 // Si el cursor está en la zona entonces se marca...
                 context.fillStyle = "black";
                 context.strokeStyle = "black";
                 context.fillRect(posx, posy, width, height);
+                return true;
+            }
+            return false;
+        };
+
+        var UpdatePlay = function(line, x, y, discriminante) {
+            if (discriminante) {
+                txtSendMove.value = ((y * columnas + x) * 4 + line);
             }
         };
 
@@ -115,13 +133,13 @@ window.addEventListener("load", function() {
                     valor = [0, 0, 0, 0];
                 }
                 // Arriba:
-                DibujaLinea(valor[0], PosX(x) + anchoBorde, PosY(y), anchoCuadro, altoBorde, MousePosition);
+                UpdatePlay(0, x, y, DibujaLinea(valor[0], PosX(x) + anchoBorde, PosY(y), anchoCuadro, altoBorde, MousePosition));
                 // Derecha
-                DibujaLinea(valor[1], PosX(x + 1), PosY(y) + altoBorde, anchoBorde, altoCuadro, MousePosition);
+                UpdatePlay(1, x, y, DibujaLinea(valor[1], PosX(x + 1), PosY(y) + altoBorde, anchoBorde, altoCuadro, MousePosition));
                 // Abajo
-                DibujaLinea(valor[2], PosX(x) + anchoBorde, PosY(y + 1), anchoCuadro, altoBorde, MousePosition);
+                UpdatePlay(2, x, y, DibujaLinea(valor[2], PosX(x) + anchoBorde, PosY(y + 1), anchoCuadro, altoBorde, MousePosition));
                 // Izquierda
-                DibujaLinea(valor[3], PosX(x), PosY(y) + altoBorde, anchoBorde, altoCuadro, MousePosition);
+                UpdatePlay(3, x, y, DibujaLinea(valor[3], PosX(x), PosY(y) + altoBorde, anchoBorde, altoCuadro, MousePosition));
                 i++;
             }
         }

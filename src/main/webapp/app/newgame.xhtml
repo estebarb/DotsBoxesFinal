@@ -28,6 +28,7 @@
                 <div class="span6">
                     <h2>Jugadores</h2>
                     <div class="row">
+                        <c:if test="#{nuevoJuegoBean.jugadores.size() lt 9}">
                         <!-- Agregar Usuario -->
                         <a href="#modalAddUsuario" role="button" class="btn btn-success" data-toggle="modal">Agregar Usuario</a>
                         <div id="modalAddUsuario" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalAddUsuarioLabel" aria-hidden="true">
@@ -67,6 +68,7 @@
                         </div>
                         <!-- Agregar Equipo -->
                         <!-- Fin agregar jugadores -->
+                        </c:if>
                     </div>
                     <div class="row">
                         <h:message for="addUserMail" class="alert alert-error"/>

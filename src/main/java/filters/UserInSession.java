@@ -30,19 +30,19 @@ public class UserInSession implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
-        
+
         Cookie[] cookie = request.getCookies();
         String user = CookieReader.getCookieValue(cookie, "user", null);
         String CKtoken = CookieReader.getCookieValue(cookie, "token", null);
-        
-        request.getSession(true).setAttribute("user", user);
-        request.getSession(true).setAttribute("token", CKtoken);
-        chain.doFilter(req, res);
+        try {
+            request.getSession(true).setAttribute("user", user);
+            request.getSession(true).setAttribute("token", CKtoken);
+        } finally {
+            chain.doFilter(req, res);
+        }
     }
 
     @Override
     public void destroy() {
     }
-    
-    
 }

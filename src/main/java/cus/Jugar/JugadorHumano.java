@@ -4,8 +4,6 @@
  */
 package cus.Jugar;
 
-import beans.UserBean;
-import cus.Autenticar.Autenticar;
 import entities.Juegos;
 import entities.Jugadores;
 import entities.Pendientes;
@@ -85,23 +83,24 @@ public class JugadorHumano extends IJugador {
 
     @Override
     public boolean AddPendiente(Juegos p) {
-        Pendientes pendiente = (Pendientes) em.createQuery("select p from Pendientes p WHERE p.juego = :juego AND p.jugador = :jugador")
-                .setParameter("juego", p)
-                .setParameter("jugador", jugador)
-                .getSingleResult();
-        List<Pendientes> todos = em.createQuery("select p from Pendientes p WHERE p.juego = :juego")
+        List<Pendientes> pendiente = em.createQuery("select p from Pendientes p WHERE p.juego = :juego")
                 .setParameter("juego", p)
                 .getResultList();
-        
-        
-        em.getTransaction().begin();
-        for(Pendientes pj : todos){
-            pj.setTurno(false);
-            em.persist(pj);
+        if(!pendiente.isEmpty()){
+            // Anterior
+            Pendientes ppOld = pendiente.get(0);
+            
+            // Actual
+            Pendientes pp = new Pendientes();
+            pp.setJuego(p);
+            pp.setJugador(user);
+            pp.setTurno(true);
+            
+            em.getTransaction().begin();
+            em.remove(ppOld);
+            em.persist(pp);
+            em.getTransaction().commit();
         }
-        pendiente.setTurno(true);
-        em.persist(pendiente);
-        em.getTransaction().commit();
         return true;
     }
 

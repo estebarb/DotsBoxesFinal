@@ -25,17 +25,24 @@
                             <h:outputText value="#{jugador.puntajeActual}"></h:outputText>
                         </h:column>
                     </h:dataTable>
-                    <strong>Es el turno de <em>#{juegoBean.jugadorActual.nombre} (turno #{juegoBean.turnoActual})</em></strong>.
+                    <strong>Es el turno de <em><h:outputText value="#{juegoBean.jugadorActual.nombre}" id="txtJugadorActual"/> (turno <h:outputText value="#{juegoBean.turnoActual + 1}" id="txtTurnoActual"/>)</em></strong>.
                 </div>
                 <div class="span9" id="gameDiv">
                     <canvas id="gameCanvas" width="100%" height="100%">
                         Canvas no está soportado. Por favor utilice un navegador más reciente.
                     </canvas>
-                    <h:inputHidden id="gameID" value=""/>
-                    <h:inputText id="gameIDData" value="0"/>
-                    <h:inputTextarea id="sizeData" value="10,10"/>
-                    <h:inputTextarea id="lineData" value="[[0,0,0,1],[2,0,0,0],[1,2,3,4]]"/>
-                    <h:inputTextarea id="boxData" value="0,0,0,0,0,1,2,3,4,5"/>
+                    <div class="well">
+                        <h:inputTextarea id="isTurno" value="#{juegoBean.isTurno}"/>
+                        <h:inputTextarea id="sizeData" value="#{juegoBean.sizeData}"/>
+                        <h:inputTextarea id="lineData" value="#{juegoBean.lineData}"/>
+                        <h:inputTextarea id="boxData" value="#{juegoBean.boxData}"/>
+                        <h:inputText id="moveData" value="#{juegoBean.movida}"/>
+                        <h:commandButton id="sendMove" value="Jugar" action="#{juegoBean.RealizarMovida}">
+                            <f:ajax 
+                                execute="moveData"
+                                render="isTurno sizeData lineData boxData tablaJugadores txtJugadorActual txtTurnoActual" />
+                        </h:commandButton>
+                    </div>
                     <h:outputScript library="application" name="gameCanvas.js" target="head"/>
                 </div>
             </div>
