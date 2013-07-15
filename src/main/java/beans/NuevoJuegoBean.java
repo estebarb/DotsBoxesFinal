@@ -7,6 +7,7 @@ package beans;
 import cus.Jugar.IJugador;
 import cus.Jugar.JugadorBot;
 import cus.Jugar.JugadorHumano;
+import entities.Juegos;
 import entities.Jugadores;
 import entities.Usuarios;
 import java.util.ArrayList;
@@ -161,12 +162,16 @@ public class NuevoJuegoBean {
             return null;
         }
         MJuego mjuego = new MJuego();
-        if (!mjuego.CrearJuego(filas, columnas, new Date(), null, jugadores)) {
+        Juegos nuevoJuego = mjuego.CrearJuego(filas, columnas, new Date(), null, jugadores);
+        if (null != nuevoJuego) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al crear el juego"));
             return null;
+        } else {
+
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .getRequestMap().put("juego", nuevoJuego);
+
+            return "/app/play";
         }
-
-        return "/app/play";
-
-    }
+    }// fin crearJuego
 }

@@ -13,6 +13,9 @@ import entities.Jugadores;
  */
 public abstract class IJugador {
     protected EPlayerTypes tipo;
+    
+    public abstract int getPuntajeActual();
+    public abstract void setPuntajeActual(int puntos);
 
     public abstract String getNombre();
 

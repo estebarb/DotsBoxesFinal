@@ -21,6 +21,7 @@ public class JugadorBot extends IJugador {
     Integer nivel;
     Jugadorespc JugadorPC;
     Jugadores jugador;
+    private int PuntajeActual;
 
     @Override
     public String getNombre() {
@@ -97,5 +98,15 @@ public class JugadorBot extends IJugador {
     @Override
     public Jugadores getJUGADOR() {
         return jugador;
+    }
+    
+    @Override
+    public int getPuntajeActual() {
+        return PuntajeActual;
+    }
+
+    @Override
+    public void setPuntajeActual(int puntos) {
+        PuntajeActual = puntos;
     }
 }

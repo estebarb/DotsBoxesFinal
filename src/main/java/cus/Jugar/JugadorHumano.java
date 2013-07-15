@@ -24,6 +24,13 @@ public class JugadorHumano extends IJugador {
     private Usuarios user;
     private Jugadores jugador;
     private EntityManager em;
+    private int PuntajeActual;
+
+    public Usuarios getUser() {
+        return user;
+    }
+    
+    
 
     public JugadorHumano() {
         this.tipo = EPlayerTypes.Human;
@@ -96,5 +103,15 @@ public class JugadorHumano extends IJugador {
         em.persist(pendiente);
         em.getTransaction().commit();
         return true;
+    }
+
+    @Override
+    public int getPuntajeActual() {
+        return PuntajeActual;
+    }
+
+    @Override
+    public void setPuntajeActual(int puntos) {
+        PuntajeActual = puntos;
     }
 }
