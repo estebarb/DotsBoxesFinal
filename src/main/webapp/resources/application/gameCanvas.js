@@ -19,6 +19,7 @@ window.addEventListener("load", function() {
     var txtBoxData = $('#boxData')[0];
     var txtIsTurno = $('#isTurno')[0];
     var txtSendMove = $('#moveData')[0];
+    var txtisTerminado = $('#isTerminado')[0];
 
     $(txtSize).change(paint);
     $(txtLineData).change(paint);
@@ -26,14 +27,16 @@ window.addEventListener("load", function() {
     $(txtIsTurno).change(paint);
 
     function UpdateData() {
-        $('#updateData').click();
-        paint();
+        if (txtisTerminado.value !== true) {
+            $('#updateData').click();
+            paint();
+        }
     }
     setInterval(UpdateData, 1000);
 
     function doMove() {
         var txtIsTurno = $('#isTurno')[0];
-        if (txtIsTurno.value == "true") {
+        if (txtIsTurno.value === "true") {
             $('#sendMove').click();
         }
     }

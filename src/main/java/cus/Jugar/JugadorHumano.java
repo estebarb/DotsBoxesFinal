@@ -27,8 +27,6 @@ public class JugadorHumano extends IJugador {
     public Usuarios getUser() {
         return user;
     }
-    
-    
 
     public JugadorHumano() {
         this.tipo = EPlayerTypes.Human;
@@ -86,19 +84,17 @@ public class JugadorHumano extends IJugador {
         List<Pendientes> pendiente = em.createQuery("select p from Pendientes p WHERE p.juego = :juego")
                 .setParameter("juego", p)
                 .getResultList();
-        if(!pendiente.isEmpty()){
+        if (!pendiente.isEmpty()) {
             // Anterior
             Pendientes ppOld = pendiente.get(0);
-            
+
             // Actual
-            Pendientes pp = new Pendientes();
-            pp.setJuego(p);
-            pp.setJugador(user);
-            pp.setTurno(true);
-            
             em.getTransaction().begin();
-            em.remove(ppOld);
-            em.persist(pp);
+            ppOld.setJuego(p);
+            ppOld.setJugador(user);
+            ppOld.setTurno(true);
+            em.merge(ppOld);
+            // Actualiza el juego:
             em.getTransaction().commit();
         }
         return true;

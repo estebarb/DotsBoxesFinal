@@ -2,7 +2,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 template="/WEB-INF/templates/template.xhtml"
-                xmlns:c="http://java.sun.com/jsp/jstl/core">
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
     <ui:define name="content">
         <div class="row">
             <h1 class="span12">#{userBean.usuarioActual.nombre}</h1>
@@ -19,6 +21,47 @@
             </div>
             <div class="span4">
                 <h2>Juegos pendientes</h2>
+                <h:form>
+                    <h:dataTable
+                        value="#{reanudarJuegoBean.juegosPendientes}" var="j"
+                        class="table table-hover"
+                        id="tablaJugadores"
+                        >
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"></h:outputText>
+                            </f:facet>
+                            <h:outputText value="#{j.fecha}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Dimensiones"></h:outputText>
+                            </f:facet>
+                            <h:outputText value="#{j.columnas}"></h:outputText>
+                            x
+                            <h:outputText value="#{j.filas}"></h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Cantidad de Jugadores"></h:outputText>
+                            </f:facet>
+                            <h:outputText value="#{j.jugadoresjuegoCollection.size()}"></h:outputText>
+                        </h:column>
+                        <h:column>
+                            <h:commandButton 
+                                value="Abrir"
+                                action="#{reanudarJuegoBean.ReLoadGame(j)}">
+                            </h:commandButton>
+                        </h:column>
+                        <h:column>
+                            <h:commandButton 
+                                value="Borrar"
+                                action="#{reanudarJuegoBean.Borrar(j)}"></h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
             </div>
         </div>
     </ui:define>

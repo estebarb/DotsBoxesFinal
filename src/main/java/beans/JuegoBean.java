@@ -15,9 +15,11 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import modelo.MJuego;
 import modelo.MUsuarios;
+import utils.EMF;
 
 /**
  *
@@ -36,6 +38,7 @@ public class JuegoBean {
     private IJugador JugadorActual;
     private Usuarios usuario;
     private Juegos juego;
+    private final EntityManager em = EMF.createEntityManager();
 
     public String getSizeData() {
         return columnas + "," + filas;
@@ -81,7 +84,7 @@ public class JuegoBean {
         //System.out.println("    " + JugadorActual.getSTipo());
         try {
             if (JugadorActual.getTipo().compareTo(EPlayerTypes.Human) == 0) {
-                return JugadorActual.getJUGADOR().getUsuario().getEmail().equals(usuario.getEmail());
+                return !juego.getIsterminado() && JugadorActual.getJUGADOR().getUsuario().getEmail().equals(usuario.getEmail());
                 //return JugadorActual.getJUGADOR().getUsuario().getId() == usuario.getId();
             }
             return false;
@@ -110,6 +113,7 @@ public class JuegoBean {
         MJuego mjuego = new MJuego();
         juego = (Juegos) FacesContext.getCurrentInstance().getExternalContext()
                 .getRequestMap().get("juego");
+
         InitFromJuego(juego);
     }
 
@@ -138,21 +142,42 @@ public class JuegoBean {
         // con line number = 0,1,2,3 según sea norte, este, sur, oeste
         try {
             if (getIsTurno()) {
-                System.out.println("hubo movida: " + movida);
+                //System.out.println("hubo movida: " + movida);
                 int mov = Integer.parseInt(movida);
                 int BoxNumber = mov / 4;
                 int LineNumber = mov % 4;
-                System.out.println("mjuego.Jugar");
+                //System.out.println("mjuego.Jugar");
                 Juegos juegoNuevo = mjuego.Jugar(juego, BoxNumber, LineNumber);
-                System.out.println("InitFromJuego");
-                InitFromJuego(juegoNuevo);
+                //System.out.println("InitFromJuego");
+                //InitFromJuego(juegoNuevo);
+                UpdateData();
             }
+        } catch (Exception e) {
+            System.err.println("error en realizar movida");
+            e.printStackTrace();
         } finally {
             return null;
         }
     }
 
+    public boolean getIsTerminado() {
+        if (juego == null) {
+            return false;
+        }
+        return juego.getIsterminado();
+    }
+
     public String UpdateData() {
+        List<Juegos> listaJuegos = em.createQuery("SELECT j FROM Juegos j WHERE j.id = :id")
+                .setParameter("id", juego.getId())
+                .getResultList();
+        if (listaJuegos != null && listaJuegos.size() > 0) {
+            this.juego = listaJuegos.get(0);
+        }
+        if (!getIsTurno()) {
+            em.refresh(juego);
+        }
+        InitFromJuego(juego);
         return null;
     }
 

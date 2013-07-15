@@ -58,7 +58,7 @@ public class MJuego {
                     jugador.fromString("hard");
                     break;
             }
-            jugador.setPuntajeActual(0);
+            jugador.setPuntajeActual(j.getPuntaje());
             salida.add(jugador);
         }
         return salida;
@@ -138,10 +138,8 @@ public class MJuego {
     }
 
     public Juegos Jugar(Juegos juego, int BoxNumber, int LineNumber) {
-        byte[] data = juego.getTablero();
-
         if (isJugadaValida(juego, BoxNumber, LineNumber)) {
-            System.out.println("@MJuego.Jugar: isValida = true");
+            //System.out.println("@MJuego.Jugar: isValida = true");
             juego = commitJugada(juego, BoxNumber, LineNumber);
         }
         return juego;
@@ -227,25 +225,26 @@ public class MJuego {
             it.next();
         }
         Jugadoresjuego jj = it.next();
+        int nuevoPuntaje = jj.getPuntaje() + cajasLlenas;
         boolean isTerminado = false;
         if (cajasLlenas > 0) {
             // Se completó una caja:
             //data[BoxNumber * 5 + 4] = numJugadorActual;
 
-            jj.setPuntaje(jj.getPuntaje() + cajasLlenas);
             //juego.setTurnoactual(juego.getTurnoactual() - 1);
 
             isTerminado = true;
             int i = 0;
             while (isTerminado && i < data.length) {
-                isTerminado &= (data[i] != 0);
-                i++;
+                isTerminado &= (data[i+4] != 0);
+                i += 5;
             }
-            juego.setIsterminado(isTerminado);
             if (isTerminado) {
-                juego.setGanador(jj.getJugador());
                 em.getTransaction().begin();
-                em.persist(jj);
+                juego.setIsterminado(isTerminado);
+                jj.setPuntaje(nuevoPuntaje);
+                juego.setGanador(jj.getJugador());
+                em.merge(jj);
 
                 // Actualiza el ranking
                 for (Jugadoresjuego jugjuego : juego.getJugadoresjuegoCollection()) {
@@ -254,12 +253,12 @@ public class MJuego {
                         case 0: // Humano
                             Usuarios user = jug.getUsuario();
                             user.setRanking(user.getRanking() + jugjuego.getPuntaje());
-                            em.persist(user);
+                            em.merge(user);
                             break;
                         case 1:
                             Jugadorespc pcia = jug.getJugadorpc();
                             pcia.setRanking(pcia.getRanking() + jugjuego.getPuntaje());
-                            em.persist(pcia);
+                            em.merge(pcia);
                             break;
                         case 2:
                         //TODO equipo
@@ -271,14 +270,17 @@ public class MJuego {
 
                 // Actualiza el juego
                 juego.setTablero(data);
-                em.persist(juego);
+                em.merge(juego);
                 em.getTransaction().commit();
             } else {
                 em.getTransaction().begin();
-                em.persist(jj);
+                juego.setIsterminado(false);
+                em.merge(jj);
+                jj.setPuntaje(nuevoPuntaje);
 
                 juego.setTablero(data);
-                em.persist(juego);
+                //em.persist(juego);
+                em.merge(juego);
                 em.getTransaction().commit();
                 IJugador siguienteJugador = IJugadorFromJugadoresJuego(jj);
                 siguienteJugador.AddPendiente(juego);
@@ -286,6 +288,7 @@ public class MJuego {
         } else {
             //System.out.println("-- 1");
             em.getTransaction().begin();
+            juego.setIsterminado(false);
             int turnoActual = juego.getTurnoactual() + 1;
             juego.setTurnoactual(turnoActual);
             juego.setTablero(data);
@@ -300,10 +303,10 @@ public class MJuego {
             IJugador siguienteJugador = IJugadorFromJugadoresJuego(jj);
             //System.out.println("-- 3: Jug siguiente= " + siguienteJugador.getNombre());
 
-            em.persist(jj);
-            em.persist(juego);
-
-            //System.out.println("El siguiente jugador es: " + siguienteJugador.getNombre() + " tipo " + siguienteJugador.getSTipo());
+            //em.persist(jj);
+            //em.persist(juego);
+            em.merge(juego);
+            System.out.println("El siguiente jugador es: " + siguienteJugador.getNombre() + " tipo " + siguienteJugador.getSTipo());
             em.getTransaction().commit();
             siguienteJugador.AddPendiente(juego);
         }
