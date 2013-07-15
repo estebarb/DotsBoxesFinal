@@ -4,8 +4,10 @@
  */
 package beans;
 
+import cus.Jugar.EPlayerTypes;
 import cus.Jugar.IJugador;
 import entities.Juegos;
+import entities.Jugadores;
 import entities.Usuarios;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +76,14 @@ public class JuegoBean {
         return sb.toString();
     }
 
-    public String getIsTurno() {
-        return "1";
+    public boolean getIsTurno() {
+        try {
+            if (JugadorActual.getTipo() == EPlayerTypes.Human) {
+                return JugadorActual.getJUGADOR().getUsuario().getId() == usuario.getId();
+            }
+        } finally {
+            return false;
+        }
     }
 
     /**
@@ -132,6 +140,10 @@ public class JuegoBean {
         } finally {
             return null;
         }
+    }
+    
+    public String UpdateData(){
+        return null;
     }
 
     public int getFilas() {

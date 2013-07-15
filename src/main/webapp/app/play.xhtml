@@ -42,6 +42,10 @@
                                 execute="moveData"
                                 render="isTurno sizeData lineData boxData tablaJugadores txtJugadorActual txtTurnoActual" />
                         </h:commandButton>
+                        <h:commandButton id="updateData" value="UpdateData" action="#{juegoBean.UpdateData}">
+                            <f:ajax
+                                render="isTurno sizeData lineData boxData tablaJugadores txtJugadorActual txtTurnoActual" />
+                        </h:commandButton>
                     </div>
                     <h:outputScript library="application" name="gameCanvas.js" target="head"/>
                 </div>

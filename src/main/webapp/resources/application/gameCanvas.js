@@ -25,6 +25,11 @@ window.addEventListener("load", function() {
     $(txtBoxData).change(paint);
     $(txtIsTurno).change(paint);
     
+    function UpdateData(){
+        $('#updateData').click();
+    }
+    setInterval(UpdateData, 1000);
+    
     function doMove(){
         $('#sendMove').click();
     }

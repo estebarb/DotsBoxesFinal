@@ -91,8 +91,28 @@ public class JugadorBot extends IJugador {
 
     @Override
     public boolean AddPendiente(Juegos p) {
-        System.out.println("JuegaBOT " + this.getNombre());
-        return true;
+        // Voy a implementar un random bot simple...
+        IMachineBot bot;
+        double probabilidad;
+        switch(nivel){
+            case 0:
+            case 1:
+                probabilidad = 0.60;
+                break;
+            case 2:
+                probabilidad = 0.20;
+                break;
+            case 3:
+            default:
+                probabilidad = 0;
+        }
+        if(Math.random() < probabilidad){
+            bot = new RandomBot();
+        } else {
+            bot = new InteligenteBot();
+        }
+                
+        return bot.Jugar(p);
     }
 
     @Override
